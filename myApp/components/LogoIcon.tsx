@@ -1,0 +1,19 @@
+import React from 'react';
+import Svg, { Path } from 'react-native-svg';
+
+interface LogoIconProps {
+  size?: number;
+}
+
+export default function LogoIcon({ size = 120 }: LogoIconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 79 79" fill="none">
+      <Path
+        d="M34.3025 34.552L34.666 34.4982L34.7226 34.1352L39.5186 3.30561L44.1893 34.3023L44.2438 34.6665L44.6061 34.7224L75.4039 39.5141L44.5699 44.0605L44.2065 44.1143L44.1491 44.4766L39.2339 75.4396L34.6808 44.5697L34.6277 44.207L34.2647 44.1489L3.26988 39.2294L34.3025 34.552Z"
+        fill="black"
+        stroke="#D9D9D9"
+      />
+    </Svg>
+  );
+}
+
