@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text } from 'react-native';
-import OnboardingScreen from './OnboardingScreen';
+
 import SecondOnboardingScreen from './SecondOnboardingScreen';
 import ThirdOnboardingScreen from './ThirdOnboardingScreen';
 import FourthOnboardingScreen from './FourthOnboardingScreen';
@@ -17,7 +17,7 @@ import FourteenthOnboardingScreen from './FourteenthOnboardingScreen';
 
 // Array of onboarding screens - add new screens here one by one
 const onboardingScreens = [
-  OnboardingScreen, // First onboarding screen: star icon + Blink text on #faf9f6 background
+
   SecondOnboardingScreen, // Second onboarding screen: main text, Get Started button, and sign in link
   ThirdOnboardingScreen, // Third onboarding screen: suggestion screen with image and Continue button
   FourthOnboardingScreen, // Fourth onboarding screen: time picker screen
@@ -37,15 +37,7 @@ const onboardingScreens = [
 export default function OnboardingFlow() {
   const [screenIndex, setScreenIndex] = useState(0);
 
-  useEffect(() => {
-    // First screen displays for 5 seconds, other screens don't auto-advance (user must tap)
-    if (screenIndex === 0) {
-      const timer = setTimeout(() => {
-        setScreenIndex(1);
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [screenIndex]);
+
 
   const handleNext = () => {
     if (screenIndex < onboardingScreens.length - 1) {
