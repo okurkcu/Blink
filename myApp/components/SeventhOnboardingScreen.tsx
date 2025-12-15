@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform, ScrollView, Image } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, ScrollView, Image, Animated } from 'react-native';
 import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_400Regular } from '@expo-google-fonts/playfair-display';
 import { Inter_400Regular } from '@expo-google-fonts/inter';
 import BackIcon from './BackIcon';
@@ -33,13 +33,42 @@ export default function SeventhOnboardingScreen({ onNext, onBack }: SeventhOnboa
   });
 
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
+  const categoryScales = useRef<{ [key: string]: Animated.Value }>({}).current;
+
+  // Initialize animation values for each category
+  categories.forEach((category) => {
+    if (!categoryScales[category.id]) {
+      categoryScales[category.id] = new Animated.Value(1);
+    }
+  });
 
   const toggleCategory = (categoryId: string) => {
     const newSelected = new Set(selectedCategories);
-    if (newSelected.has(categoryId)) {
-      newSelected.delete(categoryId);
-    } else {
+    const isSelecting = !newSelected.has(categoryId);
+    
+    if (isSelecting) {
       newSelected.add(categoryId);
+      // Spring animation when selecting
+      Animated.sequence([
+        Animated.spring(categoryScales[categoryId], {
+          toValue: 0.9,
+          useNativeDriver: true,
+        }),
+        Animated.spring(categoryScales[categoryId], {
+          toValue: 1,
+          tension: 100,
+          friction: 3,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      newSelected.delete(categoryId);
+      // Quick scale down when deselecting
+      Animated.timing(categoryScales[categoryId], {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
     }
     setSelectedCategories(newSelected);
   };
@@ -125,18 +154,26 @@ export default function SeventhOnboardingScreen({ onNext, onBack }: SeventhOnboa
         <View style={styles.categoriesGrid}>
           {categories.map((category) => {
             const isSelected = selectedCategories.has(category.id);
+            const scale = categoryScales[category.id] || new Animated.Value(1);
             return (
-              <TouchableOpacity
+              <Animated.View
                 key={category.id}
-                style={[
-                  styles.categoryButton,
-                  isSelected ? styles.categoryButtonSelected : styles.categoryButtonUnselected,
-                ]}
-                onPress={() => toggleCategory(category.id)}
+                style={{
+                  transform: [{ scale }],
+                }}
               >
-                <Text style={styles.categoryIcon}>{getCategoryIcon(category.id)}</Text>
-                <Text style={styles.categoryText}>{category.name}</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.categoryButton,
+                    isSelected ? styles.categoryButtonSelected : styles.categoryButtonUnselected,
+                  ]}
+                  onPress={() => toggleCategory(category.id)}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.categoryIcon}>{getCategoryIcon(category.id)}</Text>
+                  <Text style={styles.categoryText}>{category.name}</Text>
+                </TouchableOpacity>
+              </Animated.View>
             );
           })}
         </View>
@@ -156,7 +193,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#faf9f6',
   },
   header: {
-    paddingTop: 60,
+    paddingTop: 80, // Adjusted to account for progress bar
     paddingHorizontal: 16,
     paddingBottom: 20,
   },

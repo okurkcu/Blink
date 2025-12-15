@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#faf9f6',
   },
   header: {
-    paddingTop: 60,
+    paddingTop: 80, // Adjusted to account for progress bar
     paddingHorizontal: 16,
     paddingBottom: 20,
   },

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Animated } from 'react-native';
 import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_400Regular } from '@expo-google-fonts/playfair-display';
 import { Inter_500Medium } from '@expo-google-fonts/inter';
 import Slider from '@react-native-community/slider';
@@ -21,6 +21,126 @@ export default function SixthOnboardingScreen({ onNext, onBack }: SixthOnboardin
   const sliderValues = [3, 6, 9, 12, 15];
   const [sliderIndex, setSliderIndex] = useState(0); // Start at index 0 (value 5)
   const headlineCount = sliderValues[sliderIndex];
+
+  // Animation values
+  const titleOpacity = useRef(new Animated.Value(0)).current;
+  const titleTranslateY = useRef(new Animated.Value(20)).current;
+  const subtitleOpacity = useRef(new Animated.Value(0)).current;
+  const subtitleTranslateY = useRef(new Animated.Value(20)).current;
+  const sliderOpacity = useRef(new Animated.Value(0)).current;
+  const sliderScale = useRef(new Animated.Value(0.95)).current;
+  const labelOpacity = useRef(new Animated.Value(0)).current;
+  const labelScale = useRef(new Animated.Value(0.9)).current;
+  const buttonOpacity = useRef(new Animated.Value(0)).current;
+  const buttonTranslateY = useRef(new Animated.Value(20)).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      // Staggered animations
+      Animated.sequence([
+        // Title
+        Animated.parallel([
+          Animated.timing(titleOpacity, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(titleTranslateY, {
+            toValue: 0,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Subtitle
+        Animated.parallel([
+          Animated.timing(subtitleOpacity, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(subtitleTranslateY, {
+            toValue: 0,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Slider
+        Animated.parallel([
+          Animated.timing(sliderOpacity, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+          Animated.spring(sliderScale, {
+            toValue: 1,
+            tension: 50,
+            friction: 7,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Label
+        Animated.parallel([
+          Animated.timing(labelOpacity, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.spring(labelScale, {
+            toValue: 1,
+            tension: 100,
+            friction: 3,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Button
+        Animated.parallel([
+          Animated.timing(buttonOpacity, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(buttonTranslateY, {
+            toValue: 0,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+        ]),
+      ]).start();
+    }
+  }, [fontsLoaded]);
+
+  // Animate label when slider value changes
+  useEffect(() => {
+    Animated.sequence([
+      Animated.spring(labelScale, {
+        toValue: 1.1,
+        useNativeDriver: true,
+      }),
+      Animated.spring(labelScale, {
+        toValue: 1,
+        tension: 100,
+        friction: 3,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [headlineCount]);
+
+  const handleButtonPressIn = () => {
+    Animated.spring(buttonScale, {
+      toValue: 0.95,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleButtonPressOut = () => {
+    Animated.spring(buttonScale, {
+      toValue: 1,
+      friction: 3,
+      tension: 40,
+      useNativeDriver: true,
+    }).start();
+  };
 
   const getHeadlineLabel = (count: number) => {
     if (count === 3) return 'Balanced';
@@ -92,16 +212,42 @@ export default function SixthOnboardingScreen({ onNext, onBack }: SixthOnboardin
 
       {/* Main Content */}
       <View style={styles.content}>
-        {/* Title */}
-        <Text style={styles.title}>Choose your feed size</Text>
+        {/* Title with animation */}
+        <Animated.Text
+          style={[
+            styles.title,
+            {
+              opacity: titleOpacity,
+              transform: [{ translateY: titleTranslateY }],
+            },
+          ]}
+        >
+          Choose your feed size
+        </Animated.Text>
 
-        {/* Subtitle */}
-        <Text style={styles.subtitle}>
+        {/* Subtitle with animation */}
+        <Animated.Text
+          style={[
+            styles.subtitle,
+            {
+              opacity: subtitleOpacity,
+              transform: [{ translateY: subtitleTranslateY }],
+            },
+          ]}
+        >
           Select how many headlines you'd like each time.
-        </Text>
+        </Animated.Text>
 
-        {/* Slider */}
-        <View style={styles.sliderContainer}>
+        {/* Slider with animation */}
+        <Animated.View
+          style={[
+            styles.sliderContainer,
+            {
+              opacity: sliderOpacity,
+              transform: [{ scale: sliderScale }],
+            },
+          ]}
+        >
           <Slider
             style={styles.slider}
             minimumValue={0}
@@ -118,17 +264,41 @@ export default function SixthOnboardingScreen({ onNext, onBack }: SixthOnboardin
               <View key={index} style={styles.tick} />
             ))}
           </View>
-        </View>
+        </Animated.View>
 
-        {/* Headline Count Display */}
-        <Text style={styles.headlineLabel}>
+        {/* Headline Count Display with animation */}
+        <Animated.Text
+          style={[
+            styles.headlineLabel,
+            {
+              opacity: labelOpacity,
+              transform: [{ scale: labelScale }],
+            },
+          ]}
+        >
           {headlineCount} Headlines: {getHeadlineLabel(headlineCount)}
-        </Text>
+        </Animated.Text>
 
-        {/* Continue Button */}
-        <TouchableOpacity style={styles.continueButton} onPress={onNext}>
-          <Text style={styles.continueText}>Continue</Text>
-        </TouchableOpacity>
+        {/* Continue Button with animation */}
+        <Animated.View
+          style={{
+            opacity: buttonOpacity,
+            transform: [
+              { translateY: buttonTranslateY },
+              { scale: buttonScale },
+            ],
+          }}
+        >
+          <TouchableOpacity
+            style={styles.continueButton}
+            onPress={onNext}
+            onPressIn={handleButtonPressIn}
+            onPressOut={handleButtonPressOut}
+            activeOpacity={1}
+          >
+            <Text style={styles.continueText}>Continue</Text>
+          </TouchableOpacity>
+        </Animated.View>
       </View>
     </View>
   );
@@ -140,7 +310,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#faf9f6',
   },
   header: {
-    paddingTop: 60,
+    paddingTop: 80, // Adjusted to account for progress bar
     paddingHorizontal: 16,
     paddingBottom: 20,
   },

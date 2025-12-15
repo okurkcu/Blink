@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, Animated, Dimensions, StyleSheet } from 'react-native';
 
 import SecondOnboardingScreen from './SecondOnboardingScreen';
 import ThirdOnboardingScreen from './ThirdOnboardingScreen';
@@ -14,6 +14,9 @@ import EleventhOnboardingScreen from './EleventhOnboardingScreen';
 import TwelfthOnboardingScreen from './TwelfthOnboardingScreen';
 import ThirteenthOnboardingScreen from './ThirteenthOnboardingScreen';
 import FourteenthOnboardingScreen from './FourteenthOnboardingScreen';
+import ProgressBar from './ProgressBar';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 // Array of onboarding screens - add new screens here one by one
 const onboardingScreens = [
@@ -36,33 +39,120 @@ const onboardingScreens = [
 
 export default function OnboardingFlow() {
   const [screenIndex, setScreenIndex] = useState(0);
+  const [prevIndex, setPrevIndex] = useState(0);
+  const slideAnim = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
-
+  useEffect(() => {
+    // Determine direction based on index change
+    const isForward = screenIndex > prevIndex;
+    
+    // Set initial position based on direction
+    slideAnim.setValue(isForward ? SCREEN_WIDTH : -SCREEN_WIDTH);
+    fadeAnim.setValue(0);
+    
+    // Animate screen transition in
+    Animated.parallel([
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start();
+    
+    setPrevIndex(screenIndex);
+  }, [screenIndex]);
 
   const handleNext = () => {
     if (screenIndex < onboardingScreens.length - 1) {
-      setScreenIndex(screenIndex + 1);
+      // Animate out to left
+      Animated.parallel([
+        Animated.timing(slideAnim, {
+          toValue: -SCREEN_WIDTH,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        setScreenIndex(screenIndex + 1);
+      });
     }
   };
 
   const handleBack = () => {
     if (screenIndex > 0) {
-      setScreenIndex(screenIndex - 1);
+      // Animate out to right
+      Animated.parallel([
+        Animated.timing(slideAnim, {
+          toValue: SCREEN_WIDTH,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        setScreenIndex(screenIndex - 1);
+      });
     }
   };
 
   const CurrentScreen = onboardingScreens[screenIndex];
+  const progress = (screenIndex + 1) / onboardingScreens.length;
 
   return (
-    <View style={{ flex: 1 }}>
-      <CurrentScreen onNext={handleNext} onBack={handleBack} />
+    <View style={styles.container}>
+      {/* Progress Bar - Fixed at top */}
+      <ProgressBar progress={progress} />
+      
+      <Animated.View
+        style={[
+          styles.screenContainer,
+          {
+            transform: [{ translateX: slideAnim }],
+            opacity: fadeAnim,
+          },
+        ]}
+      >
+        <CurrentScreen onNext={handleNext} onBack={handleBack} />
+      </Animated.View>
       {/* Debug indicator - remove in production */}
       {__DEV__ && (
-        <View style={{ position: 'absolute', top: 100, left: 16, backgroundColor: 'rgba(255,0,0,0.5)', padding: 8, borderRadius: 4 }}>
+        <View style={styles.debugIndicator}>
           <Text style={{ color: 'white', fontSize: 12 }}>Screen: {screenIndex + 1}/{onboardingScreens.length}</Text>
         </View>
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    overflow: 'hidden',
+    backgroundColor: '#faf9f6',
+  },
+  screenContainer: {
+    flex: 1,
+  },
+  debugIndicator: {
+    position: 'absolute',
+    top: 100,
+    left: 16,
+    backgroundColor: 'rgba(255,0,0,0.5)',
+    padding: 8,
+    borderRadius: 4,
+  },
+});
 

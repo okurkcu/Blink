@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Animated } from 'react-native';
 import { useFonts, PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display';
 import { Inter_300Light, Inter_500Medium, Inter_700Bold } from '@expo-google-fonts/inter';
 
@@ -15,6 +15,78 @@ export default function SecondOnboardingScreen({ onNext, onBack }: SecondOnboard
     Inter_500Medium,
     Inter_700Bold,
   });
+
+  // Animation values
+  const mainTextOpacity = useRef(new Animated.Value(0)).current;
+  const mainTextTranslateY = useRef(new Animated.Value(30)).current;
+  const buttonOpacity = useRef(new Animated.Value(0)).current;
+  const buttonTranslateY = useRef(new Animated.Value(30)).current;
+  const signInOpacity = useRef(new Animated.Value(0)).current;
+  const signInTranslateY = useRef(new Animated.Value(30)).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      // Staggered animations
+      Animated.sequence([
+        // Main text
+        Animated.parallel([
+          Animated.timing(mainTextOpacity, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+          Animated.timing(mainTextTranslateY, {
+            toValue: 0,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Button
+        Animated.parallel([
+          Animated.timing(buttonOpacity, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(buttonTranslateY, {
+            toValue: 0,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Sign in text
+        Animated.parallel([
+          Animated.timing(signInOpacity, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(signInTranslateY, {
+            toValue: 0,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+        ]),
+      ]).start();
+    }
+  }, [fontsLoaded]);
+
+  const handleButtonPressIn = () => {
+    Animated.spring(buttonScale, {
+      toValue: 0.95,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleButtonPressOut = () => {
+    Animated.spring(buttonScale, {
+      toValue: 1,
+      friction: 3,
+      tension: 40,
+      useNativeDriver: true,
+    }).start();
+  };
 
   // Show loading state while fonts load
   if (!fontsLoaded) {
@@ -52,23 +124,54 @@ export default function SecondOnboardingScreen({ onNext, onBack }: SecondOnboard
 
       {/* Main Content */}
       <View style={styles.content}>
-        {/* Main Text */}
-        <Text style={styles.mainText}>
+        {/* Main Text with animation */}
+        <Animated.Text
+          style={[
+            styles.mainText,
+            {
+              opacity: mainTextOpacity,
+              transform: [{ translateY: mainTextTranslateY }],
+            },
+          ]}
+        >
           No doomscroll.{'\n'}Just the{'\n'}headlines you want.
-        </Text>
+        </Animated.Text>
 
-        {/* Get Started Button */}
-        <TouchableOpacity style={styles.getStartedButton} onPress={onNext}>
-          <Text style={styles.getStartedText}>Get Started</Text>
-        </TouchableOpacity>
+        {/* Get Started Button with animation */}
+        <Animated.View
+          style={{
+            opacity: buttonOpacity,
+            transform: [
+              { translateY: buttonTranslateY },
+              { scale: buttonScale },
+            ],
+          }}
+        >
+          <TouchableOpacity
+            style={styles.getStartedButton}
+            onPress={onNext}
+            onPressIn={handleButtonPressIn}
+            onPressOut={handleButtonPressOut}
+            activeOpacity={1}
+          >
+            <Text style={styles.getStartedText}>Get Started</Text>
+          </TouchableOpacity>
+        </Animated.View>
 
-        {/* Already have an account text */}
-        <TouchableOpacity style={styles.signInContainer}>
-          <Text style={styles.signInText}>
-            <Text style={styles.signInRegular}>Already have an account? </Text>
-            <Text style={styles.signInBold}>Sign in</Text>
-          </Text>
-        </TouchableOpacity>
+        {/* Already have an account text with animation */}
+        <Animated.View
+          style={{
+            opacity: signInOpacity,
+            transform: [{ translateY: signInTranslateY }],
+          }}
+        >
+          <TouchableOpacity style={styles.signInContainer} onPress={onNext}>
+            <Text style={styles.signInText}>
+              <Text style={styles.signInRegular}>Already have an account? </Text>
+              <Text style={styles.signInBold}>Sign in</Text>
+            </Text>
+          </TouchableOpacity>
+        </Animated.View>
       </View>
     </View>
   );
@@ -81,7 +184,7 @@ const styles = StyleSheet.create({
   },
   languageSelectorContainer: {
     position: 'absolute',
-    top: 50,
+    top: 80, // Adjusted to account for progress bar
     right: 16,
     zIndex: 10,
   },

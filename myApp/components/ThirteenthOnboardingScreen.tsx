@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   header: {
-    paddingTop: 60,
+    paddingTop: 80, // Adjusted to account for progress bar
     paddingHorizontal: 16,
     paddingBottom: 20,
   },
