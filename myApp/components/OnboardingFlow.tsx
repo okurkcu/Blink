@@ -21,8 +21,8 @@ const onboardingScreens = [
   SecondOnboardingScreen, // Second onboarding screen: main text, Get Started button, and sign in link
   ThirdOnboardingScreen, // Third onboarding screen: suggestion screen with image and Continue button
   FourthOnboardingScreen, // Fourth onboarding screen: time picker screen
-  FifthOnboardingScreen, // Fifth onboarding screen
   SixthOnboardingScreen, // Sixth onboarding screen: feed size slider (5, 10, 15, 20, 25 headlines)
+  FifthOnboardingScreen, // Fifth onboarding screen
   SeventhOnboardingScreen, // Seventh onboarding screen: category selection
   EighthOnboardingScreen, // Eighth onboarding screen: "Where did you hear about us?" social media options
   NinthOnboardingScreen, // Ninth onboarding screen: "Get news you want, exactly when you want" with image

@@ -18,16 +18,16 @@ export default function SixthOnboardingScreen({ onNext, onBack }: SixthOnboardin
   });
 
   // Slider values: 5, 10, 15, 20, 25
-  const sliderValues = [5, 10, 15, 20, 25];
+  const sliderValues = [3, 6, 9, 12, 15];
   const [sliderIndex, setSliderIndex] = useState(0); // Start at index 0 (value 5)
   const headlineCount = sliderValues[sliderIndex];
 
   const getHeadlineLabel = (count: number) => {
-    if (count === 5) return 'Balanced';
-    if (count === 10) return 'Moderate';
-    if (count === 15) return 'Detailed';
-    if (count === 20) return 'Comprehensive';
-    if (count === 25) return 'Extensive';
+    if (count === 3) return 'Balanced';
+    if (count === 6) return 'Moderate';
+    if (count === 9) return 'Detailed';
+    if (count === 12) return 'Comprehensive';
+    if (count === 15) return 'Extensive';
     return 'Balanced';
   };
 
