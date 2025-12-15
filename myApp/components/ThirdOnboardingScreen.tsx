@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform, Image } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Image, Animated } from 'react-native';
 import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_400Regular } from '@expo-google-fonts/playfair-display';
 import BackIcon from './BackIcon';
 
@@ -13,6 +13,94 @@ export default function ThirdOnboardingScreen({ onNext, onBack }: ThirdOnboardin
     PlayfairDisplay_700Bold,
     PlayfairDisplay_400Regular,
   });
+
+  // Animation values
+  const titleOpacity = useRef(new Animated.Value(0)).current;
+  const titleTranslateY = useRef(new Animated.Value(20)).current;
+  const subtitleOpacity = useRef(new Animated.Value(0)).current;
+  const subtitleTranslateY = useRef(new Animated.Value(20)).current;
+  const imageOpacity = useRef(new Animated.Value(0)).current;
+  const imageScale = useRef(new Animated.Value(0.95)).current;
+  const buttonOpacity = useRef(new Animated.Value(0)).current;
+  const buttonTranslateY = useRef(new Animated.Value(20)).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      // Staggered animations
+      Animated.sequence([
+        // Title
+        Animated.parallel([
+          Animated.timing(titleOpacity, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(titleTranslateY, {
+            toValue: 0,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Subtitle
+        Animated.parallel([
+          Animated.timing(subtitleOpacity, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(subtitleTranslateY, {
+            toValue: 0,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Image
+        Animated.parallel([
+          Animated.timing(imageOpacity, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+          Animated.spring(imageScale, {
+            toValue: 1,
+            tension: 50,
+            friction: 7,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Button
+        Animated.parallel([
+          Animated.timing(buttonOpacity, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(buttonTranslateY, {
+            toValue: 0,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+        ]),
+      ]).start();
+    }
+  }, [fontsLoaded]);
+
+  const handleButtonPressIn = () => {
+    Animated.spring(buttonScale, {
+      toValue: 0.95,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleButtonPressOut = () => {
+    Animated.spring(buttonScale, {
+      toValue: 1,
+      friction: 3,
+      tension: 40,
+      useNativeDriver: true,
+    }).start();
+  };
 
   // Show loading state while fonts load
   if (!fontsLoaded) {
@@ -54,27 +142,69 @@ export default function ThirdOnboardingScreen({ onNext, onBack }: ThirdOnboardin
 
       {/* Main Content */}
       <View style={styles.content}>
-        {/* Title */}
-        <Text style={styles.title}>Want a suggestion?</Text>
+        {/* Title with animation */}
+        <Animated.Text
+          style={[
+            styles.title,
+            {
+              opacity: titleOpacity,
+              transform: [{ translateY: titleTranslateY }],
+            },
+          ]}
+        >
+          Want a suggestion?
+        </Animated.Text>
 
-        {/* Subtitle */}
-        <Text style={styles.subtitle}>
+        {/* Subtitle with animation */}
+        <Animated.Text
+          style={[
+            styles.subtitle,
+            {
+              opacity: subtitleOpacity,
+              transform: [{ translateY: subtitleTranslateY }],
+            },
+          ]}
+        >
           Most users choose 7:00–9:00 AM for a focused start.
-        </Text>
+        </Animated.Text>
 
-        {/* Image */}
-        <View style={styles.imageContainer}>
+        {/* Image with animation */}
+        <Animated.View
+          style={[
+            styles.imageContainer,
+            {
+              opacity: imageOpacity,
+              transform: [{ scale: imageScale }],
+            },
+          ]}
+        >
           <Image 
             source={require('../assets/images/onb3.png')} 
             style={styles.image}
             resizeMode="cover"
           />
-        </View>
+        </Animated.View>
 
-        {/* Continue Button */}
-        <TouchableOpacity style={styles.continueButton} onPress={onNext}>
-          <Text style={styles.continueText}>Continue</Text>
-        </TouchableOpacity>
+        {/* Continue Button with animation */}
+        <Animated.View
+          style={{
+            opacity: buttonOpacity,
+            transform: [
+              { translateY: buttonTranslateY },
+              { scale: buttonScale },
+            ],
+          }}
+        >
+          <TouchableOpacity
+            style={styles.continueButton}
+            onPress={onNext}
+            onPressIn={handleButtonPressIn}
+            onPressOut={handleButtonPressOut}
+            activeOpacity={1}
+          >
+            <Text style={styles.continueText}>Continue</Text>
+          </TouchableOpacity>
+        </Animated.View>
       </View>
     </View>
   );
@@ -86,7 +216,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#faf9f6',
   },
   header: {
-    paddingTop: 60,
+    paddingTop: 80, // Adjusted to account for progress bar
     paddingHorizontal: 16,
     paddingBottom: 20,
   },

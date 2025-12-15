@@ -1,23 +1,23 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-interface BackIconProps {
+interface BookmarkIconProps {
   size?: number;
   color?: string;
 }
 
-export default function BackIcon({ size = 15, color = '#1E1E1E' }: BackIconProps) {
+export default function BookmarkIcon({ size = 15, color = '#1E1E1E' }: BookmarkIconProps) {
   return (
     <Svg width={size} height={size} viewBox="0 0 15 15" fill="none">
       <Path
-        d="M13.8333 7.41667H1M1 7.41667L7.41667 13.8333M1 7.41667L7.41667 1"
+        d="M3.75 1.5H11.25C11.6642 1.5 12 1.83579 12 2.25V13.5L7.5 10.5L3 13.5V2.25C3 1.83579 3.33579 1.5 3.75 1.5Z"
         stroke={color}
-        strokeWidth="2"
+        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
+        fill="none"
       />
     </Svg>
   );
 }
-
 

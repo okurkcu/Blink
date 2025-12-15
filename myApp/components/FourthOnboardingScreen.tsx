@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Animated } from 'react-native';
 import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_400Regular } from '@expo-google-fonts/playfair-display';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import BackIcon from './BackIcon';
@@ -17,6 +17,94 @@ export default function FourthOnboardingScreen({ onNext, onBack }: FourthOnboard
 
   const [selectedTime, setSelectedTime] = useState(new Date(2024, 0, 1, 9, 41, 0)); // Default: 9:41 AM
   const [showPicker, setShowPicker] = useState(false);
+
+  // Animation values
+  const titleOpacity = useRef(new Animated.Value(0)).current;
+  const titleTranslateY = useRef(new Animated.Value(20)).current;
+  const subtitleOpacity = useRef(new Animated.Value(0)).current;
+  const subtitleTranslateY = useRef(new Animated.Value(20)).current;
+  const pickerOpacity = useRef(new Animated.Value(0)).current;
+  const pickerScale = useRef(new Animated.Value(0.95)).current;
+  const buttonOpacity = useRef(new Animated.Value(0)).current;
+  const buttonTranslateY = useRef(new Animated.Value(20)).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      // Staggered animations
+      Animated.sequence([
+        // Title
+        Animated.parallel([
+          Animated.timing(titleOpacity, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(titleTranslateY, {
+            toValue: 0,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Subtitle
+        Animated.parallel([
+          Animated.timing(subtitleOpacity, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(subtitleTranslateY, {
+            toValue: 0,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Picker
+        Animated.parallel([
+          Animated.timing(pickerOpacity, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+          Animated.spring(pickerScale, {
+            toValue: 1,
+            tension: 50,
+            friction: 7,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Button
+        Animated.parallel([
+          Animated.timing(buttonOpacity, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(buttonTranslateY, {
+            toValue: 0,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+        ]),
+      ]).start();
+    }
+  }, [fontsLoaded]);
+
+  const handleButtonPressIn = () => {
+    Animated.spring(buttonScale, {
+      toValue: 0.95,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleButtonPressOut = () => {
+    Animated.spring(buttonScale, {
+      toValue: 1,
+      friction: 3,
+      tension: 40,
+      useNativeDriver: true,
+    }).start();
+  };
 
   const handleTimeChange = (event: any, date?: Date) => {
     if (Platform.OS === 'android') {
@@ -72,16 +160,42 @@ export default function FourthOnboardingScreen({ onNext, onBack }: FourthOnboard
 
       {/* Main Content */}
       <View style={styles.content}>
-        {/* Title */}
-        <Text style={styles.title}>Start Time:</Text>
+        {/* Title with animation */}
+        <Animated.Text
+          style={[
+            styles.title,
+            {
+              opacity: titleOpacity,
+              transform: [{ translateY: titleTranslateY }],
+            },
+          ]}
+        >
+          Start Time:
+        </Animated.Text>
 
-        {/* Subtitle */}
-        <Text style={styles.subtitle}>
+        {/* Subtitle with animation */}
+        <Animated.Text
+          style={[
+            styles.subtitle,
+            {
+              opacity: subtitleOpacity,
+              transform: [{ translateY: subtitleTranslateY }],
+            },
+          ]}
+        >
           Choose when you want your daily news window to begin. From this moment onward, we will collect the latest news for you.
-        </Text>
+        </Animated.Text>
 
-        {/* Time Picker */}
-        <View style={styles.timePickerContainer}>
+        {/* Time Picker with animation */}
+        <Animated.View
+          style={[
+            styles.timePickerContainer,
+            {
+              opacity: pickerOpacity,
+              transform: [{ scale: pickerScale }],
+            },
+          ]}
+        >
           {Platform.OS === 'ios' ? (
             <DateTimePicker
               value={selectedTime}
@@ -109,12 +223,28 @@ export default function FourthOnboardingScreen({ onNext, onBack }: FourthOnboard
               )}
             </>
           )}
-        </View>
+        </Animated.View>
 
-        {/* Continue Button */}
-        <TouchableOpacity style={styles.continueButton} onPress={onNext}>
-          <Text style={styles.continueText}>Continue</Text>
-        </TouchableOpacity>
+        {/* Continue Button with animation */}
+        <Animated.View
+          style={{
+            opacity: buttonOpacity,
+            transform: [
+              { translateY: buttonTranslateY },
+              { scale: buttonScale },
+            ],
+          }}
+        >
+          <TouchableOpacity
+            style={styles.continueButton}
+            onPress={onNext}
+            onPressIn={handleButtonPressIn}
+            onPressOut={handleButtonPressOut}
+            activeOpacity={1}
+          >
+            <Text style={styles.continueText}>Continue</Text>
+          </TouchableOpacity>
+        </Animated.View>
       </View>
     </View>
   );
@@ -126,7 +256,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#faf9f6',
   },
   header: {
-    paddingTop: 60,
+    paddingTop: 80, // Adjusted to account for progress bar
     paddingHorizontal: 16,
     paddingBottom: 20,
   },
