@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: 'row',
     width: '100%',
+    gap: 3,
   },
   dontAllowButton: {
     flex: 1,
