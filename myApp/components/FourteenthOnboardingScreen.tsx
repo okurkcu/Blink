@@ -16,15 +16,15 @@ interface FourteenthOnboardingScreenProps {
 const FocusGraph = () => {
   const width = 330;
   const height = 300;
-  const paddingLeft = 40;
-  const paddingRight = 40;
-  const paddingBottom = 30;
+  const paddingLeft = 50;
+  const paddingRight = 60;
+  const paddingBottom = 50;
   const graphWidth = width - paddingLeft - paddingRight;
-  const graphHeight = height - paddingBottom - 20;
+  const graphHeight = height - paddingBottom - 30;
 
   // Scales
   // Y: 0 to 40
-  const getY = (val: number) => graphHeight - (val / 40) * graphHeight + 20;
+  const getY = (val: number) => graphHeight - (val / 40) * graphHeight + 30;
   // X: 0 to 7
   const getX = (day: number) => paddingLeft + (day / 7) * graphWidth;
 
@@ -86,13 +86,13 @@ const FocusGraph = () => {
         {[0, 10, 20, 30, 40].map((val) => (
           <G key={val}>
             <SvgText
-              x={30}
+              x={45}
               y={getY(val) + 4}
               fontSize="12"
               fill="#000"
               textAnchor="end"
             >
-              {val === 0 ? '%' : `${val}%`}
+              {val === 0 ? '0 %' : `${val} %`}
             </SvgText>
             <Line
               x1={paddingLeft}
@@ -111,7 +111,7 @@ const FocusGraph = () => {
           <G key={day}>
             <SvgText
               x={getX(day)}
-              y={height - 5}
+              y={graphHeight + 45}
               fontSize="12"
               fill="#000"
               textAnchor="middle"
@@ -120,9 +120,9 @@ const FocusGraph = () => {
             </SvgText>
             <Line
               x1={getX(day)}
-              y1={20}
+              y1={30}
               x2={getX(day)}
-              y2={graphHeight + 20}
+              y2={graphHeight + 30}
               stroke="#E0E0E0"
               strokeDasharray="4 4"
               strokeWidth="1"
@@ -131,19 +131,40 @@ const FocusGraph = () => {
         ))}
 
         {/* Axes */}
+        <SvgText
+          x={paddingLeft}
+          y={15}
+          fontSize="12"
+          fill="#000"
+          textAnchor="middle"
+          fontWeight="bold"
+        >
+          Focus
+        </SvgText>
+        <SvgText
+          x={width - paddingRight + 35}
+          y={graphHeight + 34}
+          fontSize="12"
+          fill="#000"
+          textAnchor="middle"
+          fontWeight="bold"
+        >
+          Days
+        </SvgText>
+
         <Line
           x1={paddingLeft}
           y1={20}
           x2={paddingLeft}
-          y2={graphHeight + 20}
+          y2={graphHeight + 30}
           stroke="black"
           strokeWidth="1"
         />
         <Line
           x1={paddingLeft}
-          y1={graphHeight + 20}
-          x2={width - paddingRight}
-          y2={graphHeight + 20}
+          y1={graphHeight + 30}
+          x2={width - paddingRight + 15}
+          y2={graphHeight + 30}
           stroke="black"
           strokeWidth="1"
         />
@@ -200,7 +221,7 @@ export default function FourteenthOnboardingScreen({ onNext, onBack }: Fourteent
         <View style={styles.content}>
           <Text style={styles.title}>You're about to reclaim your attention</Text>
           <Text style={styles.description}>
-            Based on Blink's early user feedback, starting the day with a curated digest — instead of doomscrolling — can extend your focus windows by up to 35%.
+            Based on Blink's early user feedback, starting the day with a curated digest, instead of doomscrolling, can extend your focus windows by up to 35%.
           </Text>
           <FocusGraph />
           <TouchableOpacity style={styles.continueButton} onPress={onNext}>
@@ -227,7 +248,7 @@ export default function FourteenthOnboardingScreen({ onNext, onBack }: Fourteent
 
         {/* Description */}
         <Text style={styles.description}>
-          Based on Blink's early user feedback, starting the day with a curated digest — instead of doomscrolling — can extend your focus windows by up to 35%.
+          Based on Blink's early user feedback, starting the day with a curated digest - instead of doomscrolling - can extend your focus windows by up to 35%.
         </Text>
 
         {/* Image */}
