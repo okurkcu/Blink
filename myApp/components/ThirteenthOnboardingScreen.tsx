@@ -13,22 +13,40 @@ interface Review {
   id: string;
   name: string;
   rating: number;
-  text: string;
+  comment: string;
 }
 
 const dummyReviews: Review[] = [
   {
     id: '1',
-    name: 'Okun Kurtcu',
+    name: "Ethan Moore",
     rating: 5,
-    text: 'asdjgmdsjgmdjasmdjsjmsjamdmasldmslnfslmsdmngdmsldngsndlmsdl',
+    comment: "Blink helped me stay informed without falling into endless scrolling. I check the news, get the summary, and move on with my day."
   },
   {
     id: '2',
-    name: 'Bilal Amzi',
-    rating: 4,
-    text: 'wkdjgnsjdgnvdjsnvdjnmsvcjnmsvdjnmfgismfgismdgismdngimsnd',
+    name: "Sofia Ramirez",
+    rating: 5,
+    comment: "I love how intentional this app feels. Choosing when and how much news I see makes a huge difference for my focus."
   },
+  {
+    id: '3',
+    name: "Daniel Foster",
+    rating: 4,
+    comment: "Clean design, smart summaries, and no distractions. It’s refreshing compared to traditional news apps."
+  },
+  {
+    id: '4',
+    name: "Maya Chen",
+    rating: 5,
+    comment: "Blink respects my time. I finally feel in control of my news consumption instead of the other way around."
+  },
+  {
+    id: '5',
+    name: "Lucas Bennett",
+    rating: 4,
+    comment: "Simple idea, executed really well. Perfect for staying updated without wasting mental energy."
+  }
 ];
 
 export default function ThirteenthOnboardingScreen({ onNext, onBack }: ThirteenthOnboardingScreenProps) {
@@ -113,7 +131,7 @@ export default function ThirteenthOnboardingScreen({ onNext, onBack }: Thirteent
                   {renderStars(review.rating)}
                 </View>
               </View>
-              <Text style={styles.reviewText}>{review.text}</Text>
+              <Text style={styles.reviewText}>{review.comment}</Text>
             </View>
           ))}
         </View>
