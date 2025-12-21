@@ -15,77 +15,54 @@ export default function TenthOnboardingScreen({ onNext, onBack }: TenthOnboardin
   });
 
   const handleAllow = () => {
-    // Handle allow notification logic here
     onNext?.();
   };
 
   const handleDontAllow = () => {
-    // Handle don't allow logic here
     onNext?.();
   };
 
-  // Show loading state while fonts load
-  if (!fontsLoaded) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={onBack}>
-            <BackIcon size={15} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.content}>
-          <Text style={styles.title}>Enable Notifications</Text>
-          <View style={styles.popup}>
-            <Text style={styles.popupText}>
-              Blink would like to send you notifications
-            </Text>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.dontAllowButton} onPress={handleDontAllow}>
-                <Text style={styles.dontAllowText}>Don't Allow</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.allowButton} onPress={handleAllow}>
-                <Text style={styles.allowText}>Allow</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </View>
-    );
-  }
-
-  return (
-    <View style={styles.container}>
-      {/* Back Button */}
+  const renderContent = () => (
+    <>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={onBack}>
           <BackIcon size={15} />
         </TouchableOpacity>
       </View>
 
-      {/* Main Content */}
       <View style={styles.content}>
-        {/* Title */}
         <Text style={styles.title}>Enable Notifications</Text>
 
-        {/* Notification Popup */}
-        <View style={styles.popup}>
-          <Text style={styles.popupText}>
-            Blink would like to send you notifications
-          </Text>
+        <View style={styles.popupWrapper}>
           
-          {/* Buttons */}
-          <View style={styles.buttonContainer}>
+          {/* Part 1: The Text Container */}
+          <View style={styles.textContainer}>
+            <Text style={styles.popupText}>
+              Blink would like to send you notifications
+            </Text>
+          </View>
+
+          {/* Part 2: The Buttons */}
+          <View style={styles.buttonRow}>
             <TouchableOpacity style={styles.dontAllowButton} onPress={handleDontAllow}>
-              <Text style={styles.dontAllowText}>Don't Allow</Text>
+              <Text style={styles.dontAllowText}>Dont Allow</Text>
             </TouchableOpacity>
+            
             <TouchableOpacity style={styles.allowButton} onPress={handleAllow}>
               <Text style={styles.allowText}>Allow</Text>
             </TouchableOpacity>
           </View>
+
         </View>
       </View>
-    </View>
+    </>
   );
+
+  if (!fontsLoaded) {
+    return <View style={styles.container}>{renderContent()}</View>;
+  }
+
+  return <View style={styles.container}>{renderContent()}</View>;
 }
 
 const styles = StyleSheet.create({
@@ -94,7 +71,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#faf9f6',
   },
   header: {
-    paddingTop: 80, // Adjusted to account for progress bar
+    paddingTop: 80,
     paddingHorizontal: 16,
     paddingBottom: 20,
   },
@@ -117,68 +94,73 @@ const styles = StyleSheet.create({
     lineHeight: 40,
     marginBottom: 0,
   },
-  popup: {
+  popupWrapper: {
     position: 'absolute',
-    top: '50%',
-    left: 24,
-    right: 24,
-    transform: [{ translateY: -100 }],
-    backgroundColor: '#E8E8E8',
-    borderRadius: 20,
-    padding: 32,
+    top: '35%',
+    alignSelf: 'center',
+    width: '100%',
+    maxWidth: 340,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
     elevation: 5,
+    backgroundColor: 'transparent', 
   },
-  popupText: {
-    fontSize: 20,
-    fontFamily: 'PlayfairDisplay_400Regular',
-    fontWeight: '600',
-    color: '#000000',
-    textAlign: 'center',
-    lineHeight: 28,
-    marginBottom: 32,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 12,
-  },
-  dontAllowButton: {
-    flex: 1,
-    backgroundColor: '#E8E8E8',
-    borderRadius: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
+  textContainer: {
+    backgroundColor: '#E5E5E5',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    padding: 24,
+    marginBottom: 3, // <--- The tiny gap added here
     alignItems: 'center',
     justifyContent: 'center',
   },
+  popupText: {
+    fontSize: 17,
+    fontFamily: Platform.select({ ios: 'System', android: 'Roboto' }),
+    fontWeight: '700',
+    color: '#000000',
+    textAlign: 'center',
+    lineHeight: 24,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    width: '100%',
+  },
+  dontAllowButton: {
+    flex: 1,
+    backgroundColor: '#E5E5E5',
+    paddingVertical: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopLeftRadius: 0,     
+    borderTopRightRadius: 0,    
+    borderBottomRightRadius: 0, 
+    borderBottomLeftRadius: 16, 
+  },
   dontAllowText: {
-    fontSize: 16,
-    fontFamily: Platform.select({
-      ios: 'System',
-      android: 'Roboto',
-    }),
+    fontSize: 15,
+    fontFamily: Platform.select({ ios: 'System', android: 'Roboto' }),
     fontWeight: '600',
     color: '#000000',
   },
   allowButton: {
     flex: 1,
     backgroundColor: '#000000',
-    borderRadius: 12,
     paddingVertical: 14,
-    paddingHorizontal: 16,
     alignItems: 'center',
     justifyContent: 'center',
+    borderTopLeftRadius: 0,      
+    borderTopRightRadius: 0,     
+    borderBottomLeftRadius: 0,   
+    borderBottomRightRadius: 16, 
   },
   allowText: {
-    fontSize: 16,
-    fontFamily: Platform.select({
-      ios: 'System',
-      android: 'Roboto',
-    }),
+    fontSize: 15,
+    fontFamily: Platform.select({ ios: 'System', android: 'Roboto' }),
     fontWeight: '600',
     color: '#FFFFFF',
   },
