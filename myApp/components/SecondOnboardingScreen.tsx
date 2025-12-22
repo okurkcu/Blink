@@ -1,14 +1,18 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Image, Animated, Dimensions } from 'react-native';
 import { useFonts, PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display';
 import { Inter_300Light, Inter_500Medium, Inter_700Bold } from '@expo-google-fonts/inter';
+import LanguageSelector from './LanguageSelector';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 interface SecondOnboardingScreenProps {
   onNext?: () => void;
   onBack?: () => void;
+  onSkip?: () => void;
 }
 
-export default function SecondOnboardingScreen({ onNext, onBack }: SecondOnboardingScreenProps) {
+export default function SecondOnboardingScreen({ onNext, onBack, onSkip }: SecondOnboardingScreenProps) {
   const [fontsLoaded] = useFonts({
     PlayfairDisplay_700Bold,
     Inter_300Light,
@@ -17,28 +21,42 @@ export default function SecondOnboardingScreen({ onNext, onBack }: SecondOnboard
   });
 
   // Animation values
-  const mainTextOpacity = useRef(new Animated.Value(0)).current;
-  const mainTextTranslateY = useRef(new Animated.Value(30)).current;
+  const imageOpacity = useRef(new Animated.Value(0)).current;
+  const imageScale = useRef(new Animated.Value(0.9)).current;
+  const textOpacity = useRef(new Animated.Value(0)).current;
+  const textTranslateY = useRef(new Animated.Value(20)).current;
   const buttonOpacity = useRef(new Animated.Value(0)).current;
-  const buttonTranslateY = useRef(new Animated.Value(30)).current;
-  const signInOpacity = useRef(new Animated.Value(0)).current;
-  const signInTranslateY = useRef(new Animated.Value(30)).current;
+  const buttonTranslateY = useRef(new Animated.Value(20)).current;
   const buttonScale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     if (fontsLoaded) {
       // Staggered animations
       Animated.sequence([
-        // Main text
+        // Image
         Animated.parallel([
-          Animated.timing(mainTextOpacity, {
+          Animated.timing(imageOpacity, {
             toValue: 1,
-            duration: 500,
+            duration: 300,
             useNativeDriver: true,
           }),
-          Animated.timing(mainTextTranslateY, {
+          Animated.spring(imageScale, {
+            toValue: 1,
+            tension: 50,
+            friction: 7,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Text
+        Animated.parallel([
+          Animated.timing(textOpacity, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(textTranslateY, {
             toValue: 0,
-            duration: 500,
+            duration: 200,
             useNativeDriver: true,
           }),
         ]),
@@ -46,25 +64,12 @@ export default function SecondOnboardingScreen({ onNext, onBack }: SecondOnboard
         Animated.parallel([
           Animated.timing(buttonOpacity, {
             toValue: 1,
-            duration: 400,
+            duration: 200,
             useNativeDriver: true,
           }),
           Animated.timing(buttonTranslateY, {
             toValue: 0,
-            duration: 400,
-            useNativeDriver: true,
-          }),
-        ]),
-        // Sign in text
-        Animated.parallel([
-          Animated.timing(signInOpacity, {
-            toValue: 1,
-            duration: 400,
-            useNativeDriver: true,
-          }),
-          Animated.timing(signInTranslateY, {
-            toValue: 0,
-            duration: 400,
+            duration: 200,
             useNativeDriver: true,
           }),
         ]),
@@ -94,16 +99,8 @@ export default function SecondOnboardingScreen({ onNext, onBack }: SecondOnboard
       <View style={styles.container}>
         <View style={styles.content}>
           <Text style={{ fontSize: 24, color: '#000000', textAlign: 'center', marginBottom: 48 }}>
-            No doomscroll.{'\n'}Just the{'\n'}headlines you want.
+            No doomscroll.{'\n'}Just the headlines you want.
           </Text>
-          <TouchableOpacity style={styles.getStartedButton}>
-            <Text style={{ fontSize: 16, color: '#ffffff' }}>Get Started</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.signInContainer}>
-            <Text style={{ fontSize: 13, color: '#000000', textAlign: 'center' }}>
-              Already have an account? Sign in
-            </Text>
-          </TouchableOpacity>
         </View>
       </View>
     );
@@ -113,65 +110,73 @@ export default function SecondOnboardingScreen({ onNext, onBack }: SecondOnboard
     <View style={styles.container}>
       {/* Language Selector Button - Top Right */}
       <View style={styles.languageSelectorContainer}>
-        <TouchableOpacity style={styles.languageSelector}>
-          <View style={styles.flagContainer}>
-            {/* Flag icon placeholder - you can replace with actual flag image */}
-            <View style={styles.flagIcon} />
-          </View>
-          <Text style={styles.languageText}>En</Text>
-        </TouchableOpacity>
+        <LanguageSelector />
       </View>
 
       {/* Main Content */}
       <View style={styles.content}>
-        {/* Main Text with animation */}
-        <Animated.Text
+        {/* Phone Mockup Image with animation */}
+        <Animated.View 
           style={[
-            styles.mainText,
-            {
-              opacity: mainTextOpacity,
-              transform: [{ translateY: mainTextTranslateY }],
-            },
+            styles.imageContainer, 
+            { 
+              opacity: imageOpacity,
+              transform: [{ scale: imageScale }]
+            }
           ]}
         >
-          No doomscroll.{'\n'}Just the{'\n'}headlines you want.
-        </Animated.Text>
+          <Image 
+            source={require('../assets/images/onb3.png')}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        </Animated.View>
 
-        {/* Get Started Button with animation */}
-        <Animated.View
-          style={{
-            opacity: buttonOpacity,
-            transform: [
-              { translateY: buttonTranslateY },
-              { scale: buttonScale },
-            ],
-          }}
-        >
-          <TouchableOpacity
-            style={styles.getStartedButton}
-            onPress={onNext}
-            onPressIn={handleButtonPressIn}
-            onPressOut={handleButtonPressOut}
-            activeOpacity={1}
+        {/* Text and Buttons Container - Bottom Aligned */}
+        <View style={styles.bottomContainer}>
+          {/* Main Text with animation */}
+          <Animated.Text 
+            style={[
+              styles.mainText,
+              {
+                opacity: textOpacity,
+                transform: [{ translateY: textTranslateY }]
+              }
+            ]}
           >
-            <Text style={styles.getStartedText}>Get Started</Text>
-          </TouchableOpacity>
-        </Animated.View>
+            No doomscroll.{'\n'}Just the headlines{'\n'}you want.
+          </Animated.Text>
 
-        {/* Already have an account text with animation */}
-        <Animated.View
-          style={{
-            opacity: signInOpacity,
-            transform: [{ translateY: signInTranslateY }],
-          }}
-        >
-          <TouchableOpacity style={styles.signInContainer} onPress={onNext}>
-            <Text style={styles.signInText}>
-              <Text style={styles.signInRegular}>Already have an account? </Text>
-              <Text style={styles.signInBold}>Sign in</Text>
-            </Text>
-          </TouchableOpacity>
-        </Animated.View>
+          {/* Get Started Button with animation */}
+          <Animated.View
+            style={{
+              opacity: buttonOpacity,
+              transform: [
+                { translateY: buttonTranslateY },
+                { scale: buttonScale }
+              ],
+              width: '100%',
+            }}
+          >
+            <TouchableOpacity
+              style={styles.getStartedButton}
+              onPress={onNext}
+              onPressIn={handleButtonPressIn}
+              onPressOut={handleButtonPressOut}
+              activeOpacity={1}
+            >
+              <Text style={styles.getStartedText}>Get Started</Text>
+            </TouchableOpacity>
+
+            {/* Temporary Dev Button */}
+            <TouchableOpacity
+              style={{ marginTop: 20, padding: 10 }}
+              onPress={onSkip}
+            >
+              <Text style={{ color: 'red', fontFamily: 'Inter_500Medium' }}>[DEV] Skip to Main Screen</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
       </View>
     </View>
   );
@@ -180,94 +185,59 @@ export default function SecondOnboardingScreen({ onNext, onBack }: SecondOnboard
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#faf9f6',
+    backgroundColor: '#ffffff',
   },
   languageSelectorContainer: {
     position: 'absolute',
-    top: 80, // Adjusted to account for progress bar
+    top: 60,
     right: 16,
     zIndex: 10,
   },
-  languageSelector: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(217, 217, 217, 0.4)',
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-  },
-  flagContainer: {
-    width: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 3,
-  },
-  flagIcon: {
-    width: 20,
-    height: 20,
-    backgroundColor: '#1a1a1a', // Placeholder for flag - replace with actual image
-    borderRadius: 2,
-    // You can replace this with an Image component pointing to a flag asset
-  },
-  languageText: {
-    fontSize: 13,
-    fontFamily: 'Inter_300Light',
-    color: '#000000',
-    lineHeight: 22,
-  },
   content: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 100,
+  },
+  imageContainer: {
+    flex: 1,
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  image: {
+    width: SCREEN_WIDTH * 0.85,
+    height: '100%',
+  },
+  bottomContainer: {
+    width: '100%',
     paddingHorizontal: 24,
-    paddingBottom: 60,
+    paddingBottom: 50,
+    alignItems: 'center',
   },
   mainText: {
-    fontSize: 24,
+    fontSize: 32,
     fontFamily: 'PlayfairDisplay_700Bold',
     fontWeight: '600',
     color: '#000000',
     textAlign: 'center',
-    lineHeight: 40,
-    marginBottom: 48,
+    lineHeight: 48,
+    marginBottom: 16,
   },
   getStartedButton: {
     backgroundColor: '#000000',
-    borderRadius: 1000,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    minWidth: 200,
+    borderRadius: 100,
+    paddingVertical: 18,
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
+    marginBottom: 0,
   },
   getStartedText: {
-    fontSize: 16,
-    fontFamily: Platform.select({
-      ios: 'System',
-      android: 'Roboto',
-    }),
-    fontWeight: '600',
-    color: '#ffffff',
-    lineHeight: 21,
-    letterSpacing: -0.31,
-  },
-  signInContainer: {
-    marginTop: 8,
-  },
-  signInText: {
-    fontSize: 13,
-    color: '#000000',
-    textAlign: 'center',
-    lineHeight: 20,
-    letterSpacing: 0.5,
-  },
-  signInRegular: {
-    fontFamily: 'Inter_500Medium',
-  },
-  signInBold: {
+    fontSize: 18,
     fontFamily: 'Inter_700Bold',
+    fontWeight: '700',
+    color: '#ffffff',
   },
 });
-

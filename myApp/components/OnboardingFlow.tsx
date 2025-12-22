@@ -37,7 +37,11 @@ const onboardingScreens = [
   // Add more onboarding screens here as you create them
 ];
 
-export default function OnboardingFlow() {
+interface OnboardingFlowProps {
+  onComplete?: () => void;
+}
+
+export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const [screenIndex, setScreenIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState(0);
   const slideAnim = useRef(new Animated.Value(0)).current;
@@ -108,7 +112,7 @@ export default function OnboardingFlow() {
     }
   };
 
-  const CurrentScreen = onboardingScreens[screenIndex];
+  const CurrentScreen = onboardingScreens[screenIndex] as any;
   const progress = (screenIndex + 1) / onboardingScreens.length;
 
   return (
@@ -125,7 +129,7 @@ export default function OnboardingFlow() {
           },
         ]}
       >
-        <CurrentScreen onNext={handleNext} onBack={handleBack} />
+        <CurrentScreen onNext={handleNext} onBack={handleBack} onSkip={onComplete} />
       </Animated.View>
       {/* Debug indicator - remove in production */}
       {__DEV__ && (

@@ -74,7 +74,11 @@ const mockNewsData: NewsItem[] = [
   },
 ];
 
-export default function MainScreen() {
+interface MainScreenProps {
+  onReset?: () => void;
+}
+
+export default function MainScreen({ onReset }: MainScreenProps) {
   const [fontsLoaded] = useFonts({
     PlayfairDisplay_700Bold,
     Inter_400Regular,
@@ -179,6 +183,14 @@ export default function MainScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
+        {/* Temporary Dev Button */}
+        <TouchableOpacity
+          style={{ padding: 10, alignItems: 'center', marginBottom: 10 }}
+          onPress={onReset}
+        >
+          <Text style={{ color: 'red', fontFamily: 'Inter_700Bold' }}>[DEV] Back to Onboarding</Text>
+        </TouchableOpacity>
+
         {mockNewsData.map((item, index) => (
           <React.Fragment key={item.id}>
             <TouchableOpacity 

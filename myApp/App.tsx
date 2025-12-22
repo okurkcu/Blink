@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import OnboardingFlow from './components/OnboardingFlow';
+import MainScreen from './components/MainScreen';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -14,6 +15,7 @@ SplashScreen.setOptions({
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
+  const [showMainScreen, setShowMainScreen] = useState(false);
 
   useEffect(() => {
     async function prepare() {
@@ -43,9 +45,19 @@ export default function App() {
     return null;
   }
 
+  if (showMainScreen) {
+    // Show main screen
+    return (
+      <>
+        <MainScreen onReset={() => setShowMainScreen(false)} />
+        <StatusBar style="auto" />
+      </>
+    );
+  }
+
   return (
     <>
-      <OnboardingFlow />
+      <OnboardingFlow onComplete={() => setShowMainScreen(true)} />
       <StatusBar style="auto" />
     </>
   );
