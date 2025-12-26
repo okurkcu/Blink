@@ -4,9 +4,10 @@ import Svg, { Path } from 'react-native-svg';
 interface BookmarkIconProps {
   size?: number;
   color?: string;
+  filled?: boolean;
 }
 
-export default function BookmarkIcon({ size = 15, color = '#1E1E1E' }: BookmarkIconProps) {
+export default function BookmarkIcon({ size = 15, color = '#1E1E1E', filled = false }: BookmarkIconProps) {
   return (
     <Svg width={size} height={size} viewBox="0 0 15 15" fill="none">
       <Path
@@ -15,7 +16,7 @@ export default function BookmarkIcon({ size = 15, color = '#1E1E1E' }: BookmarkI
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        fill="none"
+        fill={filled ? color : 'none'}
       />
     </Svg>
   );

@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, PanResponder, Animated, Dimensions } from 'react-native';
 import { useFonts, PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display';
 import { Inter_400Regular, Inter_700Bold } from '@expo-google-fonts/inter';
 import ClockIcon from './ClockIcon';
 import NewsDetailScreen from './NewsDetailScreen';
 import FourthOnboardingScreen from './FourthOnboardingScreen';
 import FifthOnboardingScreen from './FifthOnboardingScreen';
+import SettingsScreen from './SettingsScreen';
+import SavedNewsScreen from './SavedNewsScreen';
+import PageIndicator from './PageIndicator';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 interface NewsItem {
   id: string;
@@ -88,6 +93,11 @@ export default function MainScreen({ onReset }: MainScreenProps) {
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
   const [showStartTime, setShowStartTime] = useState(false);
   const [showEndTime, setShowEndTime] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showSavedNews, setShowSavedNews] = useState(false);
+  
+  const slideAnim = useRef(new Animated.Value(0)).current;
+  const savedNewsSlideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current;
 
   const handleNewsPress = (newsItem: NewsItem) => {
     setSelectedNews(newsItem);
@@ -119,6 +129,105 @@ export default function MainScreen({ onReset }: MainScreenProps) {
     setShowStartTime(true);
   };
 
+  const handleSettingsBack = () => {
+    setShowSettings(false);
+  };
+
+  const handleAvatarPress = () => {
+    setShowSettings(true);
+  };
+
+  const handleSavedNewsBack = () => {
+    Animated.parallel([
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(savedNewsSlideAnim, {
+        toValue: SCREEN_WIDTH,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setShowSavedNews(false);
+    });
+  };
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => false,
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        // Only capture if swiping left and movement is more horizontal than vertical
+        return gestureState.dx < -8 && Math.abs(gestureState.dx) > Math.abs(gestureState.dy);
+      },
+      onPanResponderGrant: () => {
+        // We can add feedback here if needed
+      },
+      onPanResponderMove: (_, gestureState) => {
+        if (gestureState.dx < 0 && !showSavedNews) {
+          // Swiping left - show saved news screen
+          const translateX = Math.max(gestureState.dx, -SCREEN_WIDTH);
+          slideAnim.setValue(translateX);
+          savedNewsSlideAnim.setValue(SCREEN_WIDTH + translateX);
+        }
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        if (gestureState.dx < -100 || gestureState.vx < -0.5) {
+          // Swipe left completed - show saved news
+          setShowSavedNews(true);
+          Animated.parallel([
+            Animated.timing(slideAnim, {
+              toValue: -SCREEN_WIDTH,
+              duration: 300,
+              useNativeDriver: true,
+            }),
+            Animated.timing(savedNewsSlideAnim, {
+              toValue: 0,
+              duration: 300,
+              useNativeDriver: true,
+            }),
+          ]).start();
+        } else {
+          // Swipe not far enough - snap back
+          Animated.parallel([
+            Animated.spring(slideAnim, {
+              toValue: 0,
+              useNativeDriver: true,
+              bounciness: 4,
+              speed: 12,
+            }),
+            Animated.spring(savedNewsSlideAnim, {
+              toValue: SCREEN_WIDTH,
+              useNativeDriver: true,
+              bounciness: 4,
+              speed: 12,
+            }),
+          ]).start();
+        }
+      },
+      onPanResponderTerminate: () => {
+        Animated.parallel([
+          Animated.spring(slideAnim, {
+            toValue: 0,
+            useNativeDriver: true,
+          }),
+          Animated.spring(savedNewsSlideAnim, {
+            toValue: SCREEN_WIDTH,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      },
+    })
+  ).current;
+
+  // Show SettingsScreen if avatar was clicked
+  if (showSettings) {
+    return <SettingsScreen onBack={handleSettingsBack} />;
+  }
+
+  // Note: SavedNewsScreen is shown as an animated overlay, not a separate screen
+
   // Show NewsDetailScreen if a news item is selected
   if (selectedNews) {
     return <NewsDetailScreen newsItem={selectedNews} onBack={handleBack} />;
@@ -143,7 +252,9 @@ export default function MainScreen({ onReset }: MainScreenProps) {
             <ClockIcon size={24} />
           </TouchableOpacity>
           <Text style={{ fontSize: 22, color: '#000000', fontWeight: 'bold' }}>Blink</Text>
-          <View style={styles.avatarPlaceholder} />
+          <TouchableOpacity onPress={handleAvatarPress} activeOpacity={0.7}>
+            <View style={styles.avatarPlaceholder} />
+          </TouchableOpacity>
         </View>
         <ScrollView style={styles.scrollView}>
           {mockNewsData.map((item) => (
@@ -165,55 +276,83 @@ export default function MainScreen({ onReset }: MainScreenProps) {
   }
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={handleClockPress} activeOpacity={0.7}>
-          <ClockIcon size={24} />
-        </TouchableOpacity>
-        <Text style={styles.appTitle}>Blink</Text>
-        <View style={styles.avatarContainer}>
-          <View style={styles.avatar} />
-        </View>
-      </View>
-
-      {/* News List */}
-      <ScrollView 
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+    <View style={styles.container} {...panResponder.panHandlers}>
+      {/* Main Screen */}
+      <Animated.View
+        style={[
+          styles.screenContainer,
+          {
+            transform: [{ translateX: slideAnim }],
+          },
+        ]}
       >
-        {/* Temporary Dev Button */}
-        <TouchableOpacity
-          style={{ padding: 10, alignItems: 'center', marginBottom: 10 }}
-          onPress={onReset}
-        >
-          <Text style={{ color: 'red', fontFamily: 'Inter_700Bold' }}>[DEV] Back to Onboarding</Text>
-        </TouchableOpacity>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={handleClockPress} activeOpacity={0.7}>
+            <ClockIcon size={24} />
+          </TouchableOpacity>
+          <Text style={styles.appTitle}>Blink</Text>
+          <TouchableOpacity onPress={handleAvatarPress} activeOpacity={0.7}>
+            <View style={styles.avatarContainer}>
+              <View style={styles.avatar} />
+            </View>
+          </TouchableOpacity>
+        </View>
 
-        {mockNewsData.map((item, index) => (
-          <React.Fragment key={item.id}>
-            <TouchableOpacity 
-              style={styles.newsItem} 
-              onPress={() => handleNewsPress(item)}
-              activeOpacity={0.7}
-            >
-              <View style={styles.newsItemContent}>
-                <View style={styles.headlineRow}>
-                  <Text style={styles.headline} numberOfLines={2}>{item.headline}</Text>
-                  <Text style={styles.timestamp}>{item.timestamp}</Text>
+        {/* News List */}
+        <ScrollView 
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Temporary Dev Button */}
+          <TouchableOpacity
+            style={{ padding: 10, alignItems: 'center', marginBottom: 10 }}
+            onPress={onReset}
+          >
+            <Text style={{ color: 'red', fontFamily: 'Inter_700Bold' }}>[DEV] Back to Onboarding</Text>
+          </TouchableOpacity>
+
+          {mockNewsData.map((item, index) => (
+            <React.Fragment key={item.id}>
+              <TouchableOpacity 
+                style={styles.newsItem} 
+                onPress={() => handleNewsPress(item)}
+                activeOpacity={0.7}
+              >
+                <View style={styles.newsItemContent}>
+                  <View style={styles.headlineRow}>
+                    <Text style={styles.headline} numberOfLines={2}>{item.headline}</Text>
+                    <Text style={styles.timestamp}>{item.timestamp}</Text>
+                  </View>
+                  <View style={styles.categoryRow}>
+                    <Text style={styles.categoryIcon}>📄</Text>
+                    <Text style={styles.categoryText}>{item.category}</Text>
+                  </View>
+                  <Text style={styles.snippet} numberOfLines={3}>{item.snippet}</Text>
                 </View>
-                <View style={styles.categoryRow}>
-                  <Text style={styles.categoryIcon}>📄</Text>
-                  <Text style={styles.categoryText}>{item.category}</Text>
-                </View>
-                <Text style={styles.snippet} numberOfLines={3}>{item.snippet}</Text>
-              </View>
-            </TouchableOpacity>
-            {index < mockNewsData.length - 1 && <View style={styles.separator} />}
-          </React.Fragment>
-        ))}
-      </ScrollView>
+              </TouchableOpacity>
+              {index < mockNewsData.length - 1 && <View style={styles.separator} />}
+            </React.Fragment>
+          ))}
+        </ScrollView>
+        {/* Page Indicator - Fixed at bottom */}
+        <View style={styles.indicatorContainer}>
+          <PageIndicator totalPages={2} currentPage={0} />
+        </View>
+      </Animated.View>
+
+      {/* Saved News Screen (hidden behind, slides in on swipe) */}
+      <Animated.View
+        style={[
+          styles.savedNewsContainer,
+          {
+            transform: [{ translateX: savedNewsSlideAnim }],
+          },
+        ]}
+      >
+        <SavedNewsScreen onBack={handleSavedNewsBack} />
+      </Animated.View>
     </View>
   );
 }
@@ -221,6 +360,22 @@ export default function MainScreen({ onReset }: MainScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#faf9f6',
+    overflow: 'hidden',
+  },
+  screenContainer: {
+    flex: 1,
+    position: 'absolute',
+    width: SCREEN_WIDTH,
+    height: '100%',
+    backgroundColor: '#faf9f6',
+    justifyContent: 'space-between',
+  },
+  savedNewsContainer: {
+    flex: 1,
+    position: 'absolute',
+    width: SCREEN_WIDTH,
+    height: '100%',
     backgroundColor: '#faf9f6',
   },
   header: {
@@ -260,7 +415,15 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 16,
-    paddingBottom: 40,
+    paddingBottom: 80,
+  },
+  indicatorContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'transparent',
+    paddingBottom: 20,
   },
   newsItem: {
     paddingVertical: 16,
