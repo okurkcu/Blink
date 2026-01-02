@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Animated, Dimensions, PanResponder } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Animated, Dimensions, PanResponder, Image } from 'react-native';
 import { useFonts, PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display';
 import { Inter_400Regular, Inter_700Bold } from '@expo-google-fonts/inter';
-import BackIcon from './BackIcon';
 import BookmarkIcon from './BookmarkIcon';
+import CategorySelector from './CategorySelector';
 import NewsDetailScreen from './NewsDetailScreen';
 import PageIndicator from './PageIndicator';
 
@@ -30,7 +30,7 @@ const mockSavedNewsData: SavedNewsItem[] = [
   {
     id: 'saved-2',
     headline: 'Fall of Curry\'s UA Partnership',
-    category: 'Global',
+    category: 'Sports',
     snippet: 'Stephen Curry and Under Armour made their breakup official on Nov. 13, announcing that a decade-plus partnership had ended. Fans of the Golden State Warriors superstar...',
     timestamp: 'Tue, 00.12',
     savedDate: 'Saved 3 days ago',
@@ -70,7 +70,7 @@ const mockSavedNewsData: SavedNewsItem[] = [
   {
     id: 'saved-7',
     headline: 'Global Economic Forum Concludes',
-    category: 'Global',
+    category: 'Business',
     snippet: 'World leaders and business executives gathered for the annual economic forum, discussing strategies for sustainable growth and international cooperation...',
     timestamp: 'Sun, 16.30',
     savedDate: 'Saved 2 weeks ago',
@@ -78,12 +78,30 @@ const mockSavedNewsData: SavedNewsItem[] = [
   {
     id: 'saved-8',
     headline: 'Major Sports League Announces Expansion',
-    category: 'Global',
+    category: 'Sports',
     snippet: 'In a historic move, one of the world\'s premier sports leagues has announced plans for significant expansion, bringing the sport to new markets and audiences...',
     timestamp: 'Sat, 15.00',
     savedDate: 'Saved 3 weeks ago',
   },
+  {
+    id: 'saved-9',
+    headline: 'Political Debate Draws Record Viewers',
+    category: 'Politics',
+    snippet: 'The latest political debate shattered viewership records, with millions tuning in to watch candidates discuss key issues facing the nation...',
+    timestamp: 'Fri, 14.00',
+    savedDate: 'Saved 3 weeks ago',
+  },
+  {
+    id: 'saved-10',
+    headline: 'New Health Study Released',
+    category: 'Health',
+    snippet: 'Researchers have published a comprehensive health study revealing important insights into disease prevention and wellness practices...',
+    timestamp: 'Fri, 13.00',
+    savedDate: 'Saved 1 month ago',
+  },
 ];
+
+const categories = ['All', 'Global', 'Sports', 'Politics', 'Entertainment', 'Science & Tech', 'Business', 'Health'];
 
 interface SavedNewsScreenProps {
   onBack: () => void;
@@ -97,11 +115,13 @@ export default function SavedNewsScreen({ onBack }: SavedNewsScreenProps) {
   });
 
   const [selectedNews, setSelectedNews] = useState<SavedNewsItem | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [bookmarkedItems, setBookmarkedItems] = useState<Set<string>>(
     new Set(mockSavedNewsData.map(item => item.id))
   );
 
   const slideAnim = useRef(new Animated.Value(0)).current;
+  const newsDetailSlideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current;
 
   const panResponder = useRef(
     PanResponder.create({
@@ -152,10 +172,23 @@ export default function SavedNewsScreen({ onBack }: SavedNewsScreenProps) {
 
   const handleNewsPress = (newsItem: SavedNewsItem) => {
     setSelectedNews(newsItem);
+    // Animate news detail screen sliding in from right
+    Animated.timing(newsDetailSlideAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
   };
 
   const handleBack = () => {
-    setSelectedNews(null);
+    // Animate news detail screen sliding out to right
+    Animated.timing(newsDetailSlideAnim, {
+      toValue: SCREEN_WIDTH,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      setSelectedNews(null);
+    });
   };
 
   const handleBookmarkPress = (itemId: string) => {
@@ -170,20 +203,28 @@ export default function SavedNewsScreen({ onBack }: SavedNewsScreenProps) {
     });
   };
 
-  // Show NewsDetailScreen if a news item is selected
-  if (selectedNews) {
-    return <NewsDetailScreen newsItem={selectedNews} onBack={handleBack} />;
-  }
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category);
+  };
+
+  // Filter news based on selected category
+  const filteredNews = selectedCategory === 'All' 
+    ? mockSavedNewsData 
+    : mockSavedNewsData.filter(item => item.category === selectedCategory);
 
   // Show loading state while fonts load
   if (!fontsLoaded) {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={onBack}>
-            <BackIcon size={15} />
-          </TouchableOpacity>
-          <Text style={styles.title}>Saved</Text>
+          <View style={styles.logoContainer}>
+            <Image 
+              source={require('../assets/icons/adaptive-icon.png')} 
+              style={styles.logoImage}
+              resizeMode="contain"
+            />
+            <Text style={styles.title}>Saved</Text>
+          </View>
           <View style={styles.placeholder} />
         </View>
         <ScrollView style={styles.scrollView}>
@@ -213,35 +254,46 @@ export default function SavedNewsScreen({ onBack }: SavedNewsScreenProps) {
           transform: [{ translateX: slideAnim }],
         },
       ]}
-      {...panResponder.panHandlers}
     >
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={onBack}>
-          <View style={styles.backButtonContainer}>
-            <BackIcon size={15} />
-          </View>
-        </TouchableOpacity>
-        <Text style={styles.title}>Saved</Text>
+        <View style={styles.logoContainer}>
+          <Image 
+            source={require('../assets/icons/adaptive-icon.png')} 
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
+          <Text style={styles.title}>Saved</Text>
+        </View>
         <View style={styles.placeholder} />
       </View>
 
-      {/* Saved News List */}
+      {/* Category Selector */}
+      <CategorySelector 
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onSelectCategory={handleCategorySelect}
+      />
+
+      {/* Saved News List - PanResponder attached here to allow category scrolling */}
+      <View style={styles.scrollViewWrapper} {...panResponder.panHandlers}>
       <ScrollView 
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {mockSavedNewsData.length === 0 ? (
+        {filteredNews.length === 0 ? (
           <View style={styles.emptyState}>
             <Text style={styles.emptyStateIcon}>📚</Text>
             <Text style={styles.emptyStateTitle}>No Saved Articles</Text>
             <Text style={styles.emptyStateText}>
-              Articles you bookmark will appear here
+              {selectedCategory === 'All' 
+                ? 'Articles you bookmark will appear here'
+                : `No saved articles in ${selectedCategory}`}
             </Text>
           </View>
         ) : (
-          mockSavedNewsData.map((item, index) => (
+          filteredNews.map((item, index) => (
             <React.Fragment key={item.id}>
               <TouchableOpacity 
                 style={styles.newsItem} 
@@ -275,15 +327,30 @@ export default function SavedNewsScreen({ onBack }: SavedNewsScreenProps) {
                   </View>
                 </View>
               </TouchableOpacity>
-              {index < mockSavedNewsData.length - 1 && <View style={styles.separator} />}
+              {index < filteredNews.length - 1 && <View style={styles.separator} />}
             </React.Fragment>
           ))
         )}
       </ScrollView>
+      </View>
       {/* Page Indicator - Fixed at bottom */}
       <View style={styles.indicatorContainer}>
         <PageIndicator totalPages={2} currentPage={1} />
       </View>
+
+      {/* News Detail Screen (slides in from right when news is selected) */}
+      {selectedNews && (
+        <Animated.View
+          style={[
+            styles.newsDetailContainer,
+            {
+              transform: [{ translateX: newsDetailSlideAnim }],
+            },
+          ]}
+        >
+          <NewsDetailScreen newsItem={selectedNews} onBack={handleBack} />
+        </Animated.View>
+      )}
     </Animated.View>
   );
 }
@@ -302,28 +369,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 20,
   },
-  backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
+  logoContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
   },
-  backButtonContainer: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(217, 217, 217, 0.4)',
-    borderRadius: 20,
+  logoImage: {
+    width: 55,
+    height: 55,
+    margin: -13,
+    backgroundColor: 'transparent',
   },
   title: {
     fontSize: 24,
     fontFamily: 'PlayfairDisplay_700Bold',
     color: '#000000',
-    lineHeight: 22,
+    lineHeight: 28,
   },
   placeholder: {
     width: 40,
+  },
+  scrollViewWrapper: {
+    flex: 1,
   },
   scrollView: {
     flex: 1,
@@ -433,6 +500,15 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#E0E0E0',
     width: '100%',
+  },
+  newsDetailContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#faf9f6',
+    zIndex: 10,
   },
 });
 

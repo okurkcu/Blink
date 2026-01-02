@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface PageIndicatorProps {
   totalPages: number;
@@ -8,21 +9,32 @@ interface PageIndicatorProps {
 
 export default function PageIndicator({ totalPages, currentPage }: PageIndicatorProps) {
   return (
-    <View style={styles.container}>
-      {Array.from({ length: totalPages }).map((_, index) => (
-        <View
-          key={index}
-          style={[
-            styles.dot,
-            index === currentPage ? styles.activeDot : styles.inactiveDot,
-          ]}
-        />
-      ))}
-    </View>
+    <LinearGradient
+      colors={['rgba(250, 249, 246, 0.95)', 'rgba(250, 249, 246, 0)']}
+      style={styles.gradientContainer}
+      start={{ x: 0, y: 1 }}
+      end={{ x: 0, y: 0 }}
+    >
+      <View style={styles.container}>
+        {Array.from({ length: totalPages }).map((_, index) => (
+          <View
+            key={index}
+            style={[
+              styles.dot,
+              index === currentPage ? styles.activeDot : styles.inactiveDot,
+            ]}
+          />
+        ))}
+      </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradientContainer: {
+    width: '100%',
+    paddingTop: 40,
+  },
   container: {
     flexDirection: 'row',
     justifyContent: 'center',

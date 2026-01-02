@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, PanResponder, Animated, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, PanResponder, Animated, Dimensions, Image } from 'react-native';
 import { useFonts, PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display';
 import { Inter_400Regular, Inter_700Bold } from '@expo-google-fonts/inter';
-import ClockIcon from './ClockIcon';
+import CategorySelector from './CategorySelector';
 import NewsDetailScreen from './NewsDetailScreen';
 import FourthOnboardingScreen from './FourthOnboardingScreen';
 import FifthOnboardingScreen from './FifthOnboardingScreen';
@@ -31,14 +31,14 @@ const mockNewsData: NewsItem[] = [
   {
     id: '2',
     headline: 'Fall of Curry\'s UA Partnership',
-    category: 'Global',
+    category: 'Sports',
     snippet: 'Stephen Curry and Under Armour made their breakup official on Nov. 13, announcing that a decade-plus partnership had ended. Fans of the Golden State Warriors superstar...',
     timestamp: 'Tue, 00.12',
   },
   {
     id: '3',
     headline: 'Trump wants to release Diddy',
-    category: 'Global',
+    category: 'Politics',
     snippet: 'Former President Donald Trump has granted a pardon to Sean \'Diddy\' Combs, clearing his legal record and sparking widespread public debate. The decision quickly drew...',
     timestamp: 'Mon, 23.05',
   },
@@ -52,7 +52,7 @@ const mockNewsData: NewsItem[] = [
   {
     id: '5',
     headline: '"Yes King" dies at 52',
-    category: 'Global',
+    category: 'Entertainment',
     snippet: 'On 19 October 2025, thieves disguised as construction workers stole eight pieces of the French Crown Jewels valued at approximately €88 million from the Galeria d\'Apollon...',
     timestamp: 'Mon, 22.00',
   },
@@ -77,7 +77,23 @@ const mockNewsData: NewsItem[] = [
     snippet: 'Scientists have announced a major breakthrough in medical research that could revolutionize treatment for chronic diseases, offering new hope to millions...',
     timestamp: 'Mon, 19.15',
   },
+  {
+    id: '9',
+    headline: 'Stock Market Reaches All-Time High',
+    category: 'Business',
+    snippet: 'Global stock markets surged to record highs today as investors respond positively to economic indicators and corporate earnings reports...',
+    timestamp: 'Mon, 18.30',
+  },
+  {
+    id: '10',
+    headline: 'New Health Guidelines Released',
+    category: 'Health',
+    snippet: 'The World Health Organization has released updated guidelines for public health, focusing on preventive care and wellness...',
+    timestamp: 'Mon, 17.45',
+  },
 ];
+
+const categories = ['All', 'Global', 'Sports', 'Politics', 'Entertainment', 'Science & Tech', 'Business', 'Health'];
 
 interface MainScreenProps {
   onReset?: () => void;
@@ -95,16 +111,32 @@ export default function MainScreen({ onReset }: MainScreenProps) {
   const [showEndTime, setShowEndTime] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showSavedNews, setShowSavedNews] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('All');
   
   const slideAnim = useRef(new Animated.Value(0)).current;
   const savedNewsSlideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current;
+  const newsDetailSlideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current;
+  const settingsSlideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current;
 
   const handleNewsPress = (newsItem: NewsItem) => {
     setSelectedNews(newsItem);
+    // Animate news detail screen sliding in from right
+    Animated.timing(newsDetailSlideAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
   };
 
   const handleBack = () => {
-    setSelectedNews(null);
+    // Animate news detail screen sliding out to right
+    Animated.timing(newsDetailSlideAnim, {
+      toValue: SCREEN_WIDTH,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      setSelectedNews(null);
+    });
   };
 
   const handleClockPress = () => {
@@ -130,12 +162,34 @@ export default function MainScreen({ onReset }: MainScreenProps) {
   };
 
   const handleSettingsBack = () => {
-    setShowSettings(false);
+    // Animate settings screen sliding out to right
+    Animated.timing(settingsSlideAnim, {
+      toValue: SCREEN_WIDTH,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      setShowSettings(false);
+    });
   };
 
   const handleAvatarPress = () => {
     setShowSettings(true);
+    // Animate settings screen sliding in from right
+    Animated.timing(settingsSlideAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
   };
+
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category);
+  };
+
+  // Filter news based on selected category
+  const filteredNews = selectedCategory === 'All' 
+    ? mockNewsData 
+    : mockNewsData.filter(item => item.category === selectedCategory);
 
   const handleSavedNewsBack = () => {
     Animated.parallel([
@@ -221,17 +275,7 @@ export default function MainScreen({ onReset }: MainScreenProps) {
     })
   ).current;
 
-  // Show SettingsScreen if avatar was clicked
-  if (showSettings) {
-    return <SettingsScreen onBack={handleSettingsBack} />;
-  }
-
-  // Note: SavedNewsScreen is shown as an animated overlay, not a separate screen
-
-  // Show NewsDetailScreen if a news item is selected
-  if (selectedNews) {
-    return <NewsDetailScreen newsItem={selectedNews} onBack={handleBack} />;
-  }
+  // Note: SavedNewsScreen and SettingsScreen are shown as animated overlays, not separate screens
 
   // Show End Time screen if clock was clicked and start time was completed
   if (showEndTime) {
@@ -248,10 +292,14 @@ export default function MainScreen({ onReset }: MainScreenProps) {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={handleClockPress} activeOpacity={0.7}>
-            <ClockIcon size={24} />
-          </TouchableOpacity>
-          <Text style={{ fontSize: 22, color: '#000000', fontWeight: 'bold' }}>Blink</Text>
+          <View style={styles.logoContainer}>
+            <Image 
+              source={require('../assets/icons/adaptive-icon.png')} 
+              style={styles.logoImage}
+              resizeMode="contain"
+            />
+            <Text style={styles.appTitle}>Blink</Text>
+          </View>
           <TouchableOpacity onPress={handleAvatarPress} activeOpacity={0.7}>
             <View style={styles.avatarPlaceholder} />
           </TouchableOpacity>
@@ -276,7 +324,7 @@ export default function MainScreen({ onReset }: MainScreenProps) {
   }
 
   return (
-    <View style={styles.container} {...panResponder.panHandlers}>
+    <View style={styles.container}>
       {/* Main Screen */}
       <Animated.View
         style={[
@@ -288,10 +336,14 @@ export default function MainScreen({ onReset }: MainScreenProps) {
       >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={handleClockPress} activeOpacity={0.7}>
-            <ClockIcon size={24} />
-          </TouchableOpacity>
-          <Text style={styles.appTitle}>Blink</Text>
+          <View style={styles.logoContainer}>
+            <Image 
+              source={require('../assets/icons/adaptive-icon.png')} 
+              style={styles.logoImage}
+              resizeMode="contain"
+            />
+            <Text style={styles.appTitle}>Blink</Text>
+          </View>
           <TouchableOpacity onPress={handleAvatarPress} activeOpacity={0.7}>
             <View style={styles.avatarContainer}>
               <View style={styles.avatar} />
@@ -299,21 +351,21 @@ export default function MainScreen({ onReset }: MainScreenProps) {
           </TouchableOpacity>
         </View>
 
-        {/* News List */}
+        {/* Category Selector */}
+        <CategorySelector 
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onSelectCategory={handleCategorySelect}
+        />
+
+        {/* News List - PanResponder attached here to allow category scrolling */}
+        <View style={styles.scrollViewWrapper} {...panResponder.panHandlers}>
         <ScrollView 
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          {/* Temporary Dev Button */}
-          <TouchableOpacity
-            style={{ padding: 10, alignItems: 'center', marginBottom: 10 }}
-            onPress={onReset}
-          >
-            <Text style={{ color: 'red', fontFamily: 'Inter_700Bold' }}>[DEV] Back to Onboarding</Text>
-          </TouchableOpacity>
-
-          {mockNewsData.map((item, index) => (
+          {filteredNews.map((item, index) => (
             <React.Fragment key={item.id}>
               <TouchableOpacity 
                 style={styles.newsItem} 
@@ -332,10 +384,19 @@ export default function MainScreen({ onReset }: MainScreenProps) {
                   <Text style={styles.snippet} numberOfLines={3}>{item.snippet}</Text>
                 </View>
               </TouchableOpacity>
-              {index < mockNewsData.length - 1 && <View style={styles.separator} />}
+              {index < filteredNews.length - 1 && <View style={styles.separator} />}
             </React.Fragment>
           ))}
+
+          {/* Temporary Dev Button - moved to end */}
+          <TouchableOpacity
+            style={styles.devButton}
+            onPress={onReset}
+          >
+            <Text style={styles.devButtonText}>[DEV] Back to Onboarding</Text>
+          </TouchableOpacity>
         </ScrollView>
+        </View>
         {/* Page Indicator - Fixed at bottom */}
         <View style={styles.indicatorContainer}>
           <PageIndicator totalPages={2} currentPage={0} />
@@ -353,6 +414,34 @@ export default function MainScreen({ onReset }: MainScreenProps) {
       >
         <SavedNewsScreen onBack={handleSavedNewsBack} />
       </Animated.View>
+
+      {/* News Detail Screen (slides in from right when news is selected) */}
+      {selectedNews && (
+        <Animated.View
+          style={[
+            styles.newsDetailContainer,
+            {
+              transform: [{ translateX: newsDetailSlideAnim }],
+            },
+          ]}
+        >
+          <NewsDetailScreen newsItem={selectedNews} onBack={handleBack} />
+        </Animated.View>
+      )}
+
+      {/* Settings Screen (slides in from right when avatar is clicked) */}
+      {showSettings && (
+        <Animated.View
+          style={[
+            styles.settingsContainer,
+            {
+              transform: [{ translateX: settingsSlideAnim }],
+            },
+          ]}
+        >
+          <SettingsScreen onBack={handleSettingsBack} />
+        </Animated.View>
+      )}
     </View>
   );
 }
@@ -378,6 +467,21 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: '#faf9f6',
   },
+  newsDetailContainer: {
+    flex: 1,
+    position: 'absolute',
+    width: SCREEN_WIDTH,
+    height: '100%',
+    backgroundColor: '#faf9f6',
+  },
+  settingsContainer: {
+    flex: 1,
+    position: 'absolute',
+    width: SCREEN_WIDTH,
+    height: '100%',
+    backgroundColor: '#faf9f6',
+    zIndex: 10,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -386,11 +490,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 20,
   },
+  logoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  logoImage: {
+    width: 55,
+    height: 55,
+    margin: -13,
+    backgroundColor: 'transparent',
+  },
   appTitle: {
     fontSize: 24,
     fontFamily: 'PlayfairDisplay_700Bold',
     color: '#000000',
-    lineHeight: 22,
+    lineHeight: 28,
   },
   avatarContainer: {
     width: 40,
@@ -409,6 +524,9 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: '#d9d9d9',
+  },
+  scrollViewWrapper: {
+    flex: 1,
   },
   scrollView: {
     flex: 1,
@@ -478,6 +596,17 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#E0E0E0',
     width: '100%',
+  },
+  devButton: {
+    padding: 16,
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  devButtonText: {
+    color: '#ff0000',
+    fontFamily: 'Inter_700Bold',
+    fontSize: 12,
   },
 });
 
