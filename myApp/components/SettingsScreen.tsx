@@ -137,9 +137,10 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
             <BackIcon size={15} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Settings</Text>
-          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          {/* <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
             <Text style={styles.logoutText}>Logout</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <View style={styles.logoutButtonPlaceholder} />
         </View>
       </View>
     );
@@ -155,9 +156,10 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
           </View>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Settings</Text>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        {/* <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <View style={styles.logoutButtonPlaceholder} />
       </View>
 
       {/* Scrollable Content */}
@@ -211,7 +213,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 60,
+    paddingTop: 70,
     paddingHorizontal: 16,
     paddingBottom: 20,
   },
@@ -233,7 +235,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'PlayfairDisplay_700Bold',
     color: '#000000',
-    lineHeight: 22,
+    lineHeight: 28,
   },
   logoutButton: {
     paddingHorizontal: 12,
@@ -243,6 +245,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Inter_500Medium',
     color: '#FF3B30',
+  },
+  logoutButtonPlaceholder: {
+    width: 60,
   },
   scrollView: {
     flex: 1,

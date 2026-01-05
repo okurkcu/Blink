@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 60,
+    paddingTop: 70,
     paddingHorizontal: 16,
     paddingBottom: 20,
   },
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: 'PlayfairDisplay_700Bold',
     color: '#000000',
-    lineHeight: 22,
+    lineHeight: 30,
   },
   placeholder: {
     width: 40,
@@ -148,5 +148,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E0E0E0',
   },
 });
+
+
 
 

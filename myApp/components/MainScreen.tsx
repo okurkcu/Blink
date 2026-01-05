@@ -191,7 +191,16 @@ export default function MainScreen({ onReset }: MainScreenProps) {
     ? mockNewsData 
     : mockNewsData.filter(item => item.category === selectedCategory);
 
+  // Ref to access SavedNewsScreen's slideAnim for reset
+  const savedNewsScreenSlideAnimRef = useRef<Animated.Value | null>(null);
+
+  const handleSavedNewsSlideAnimReady = (slideAnim: Animated.Value) => {
+    savedNewsScreenSlideAnimRef.current = slideAnim;
+  };
+
   const handleSavedNewsBack = () => {
+    // Start animation immediately - don't wait for SavedNewsScreen to reset
+    // The wrapper animation will move SavedNewsScreen off-screen regardless of its internal slideAnim
     Animated.parallel([
       Animated.timing(slideAnim, {
         toValue: 0,
@@ -204,6 +213,10 @@ export default function MainScreen({ onReset }: MainScreenProps) {
         useNativeDriver: true,
       }),
     ]).start(() => {
+      // Reset SavedNewsScreen's internal slideAnim after animation completes
+      if (savedNewsScreenSlideAnimRef.current) {
+        savedNewsScreenSlideAnimRef.current.setValue(0);
+      }
       setShowSavedNews(false);
     });
   };
@@ -412,7 +425,10 @@ export default function MainScreen({ onReset }: MainScreenProps) {
           },
         ]}
       >
-        <SavedNewsScreen onBack={handleSavedNewsBack} />
+        <SavedNewsScreen 
+          onBack={handleSavedNewsBack} 
+          onSlideAnimReady={handleSavedNewsSlideAnimReady}
+        />
       </Animated.View>
 
       {/* News Detail Screen (slides in from right when news is selected) */}
@@ -486,7 +502,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 60,
+    paddingTop: 70,
     paddingHorizontal: 16,
     paddingBottom: 20,
   },
@@ -505,7 +521,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: 'PlayfairDisplay_700Bold',
     color: '#000000',
-    lineHeight: 28,
+    lineHeight: 30,
   },
   avatarContainer: {
     width: 40,
