@@ -105,9 +105,10 @@ const categories = ['All', 'Global', 'Sports', 'Politics', 'Entertainment', 'Sci
 
 interface SavedNewsScreenProps {
   onBack: () => void;
+  onSlideAnimReady?: (slideAnim: Animated.Value) => void;
 }
 
-export default function SavedNewsScreen({ onBack }: SavedNewsScreenProps) {
+export default function SavedNewsScreen({ onBack, onSlideAnimReady }: SavedNewsScreenProps) {
   const [fontsLoaded] = useFonts({
     PlayfairDisplay_700Bold,
     Inter_400Regular,
@@ -122,6 +123,13 @@ export default function SavedNewsScreen({ onBack }: SavedNewsScreenProps) {
 
   const slideAnim = useRef(new Animated.Value(0)).current;
   const newsDetailSlideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current;
+  
+  // Expose slideAnim to parent component so it can reset it after animation
+  React.useEffect(() => {
+    if (onSlideAnimReady) {
+      onSlideAnimReady(slideAnim);
+    }
+  }, [onSlideAnimReady, slideAnim]);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -143,14 +151,9 @@ export default function SavedNewsScreen({ onBack }: SavedNewsScreenProps) {
       onPanResponderRelease: (_, gestureState) => {
         if (gestureState.dx > 100 || gestureState.vx > 0.5) {
           // Swipe right completed - go back
-          Animated.timing(slideAnim, {
-            toValue: SCREEN_WIDTH,
-            duration: 300,
-            useNativeDriver: true,
-          }).start(() => {
-            onBack();
-            slideAnim.setValue(0);
-          });
+          // Don't reset slideAnim immediately - keep it at swipe position
+          // MainScreen will handle the animation and reset slideAnim after completion
+          onBack();
         } else {
           // Swipe not far enough - snap back
           Animated.spring(slideAnim, {
@@ -365,7 +368,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 60,
+    paddingTop: 70,
     paddingHorizontal: 16,
     paddingBottom: 20,
   },
@@ -384,7 +387,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: 'PlayfairDisplay_700Bold',
     color: '#000000',
-    lineHeight: 28,
+    lineHeight: 30,
   },
   placeholder: {
     width: 40,
