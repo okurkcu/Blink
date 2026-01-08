@@ -71,7 +71,8 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
     { id: 'notifications' as SettingsSubScreen, title: 'Notifications', description: 'Configure notification preferences' },
     { id: 'language' as SettingsSubScreen, title: 'Language', description: 'Change app language' },
     { id: 'timeInterval' as SettingsSubScreen, title: 'Set News Time Interval', description: 'Set your news delivery schedule' },
-    { id: 'privacyData' as SettingsSubScreen, title: 'Privacy & Data', description: 'Privacy and data settings' },
+    // Privacy & Data - will be added in next increment
+    // { id: 'privacyData' as SettingsSubScreen, title: 'Privacy & Data', description: 'Privacy and data settings' },
   ];
 
 

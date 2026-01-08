@@ -1,34 +1,23 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import { useFonts, PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display';
-import { Inter_400Regular, Inter_700Bold } from '@expo-google-fonts/inter';
+import { Inter_400Regular, Inter_700Bold, Inter_500Medium } from '@expo-google-fonts/inter';
 import BackIcon from '../BackIcon';
+import { LANGUAGES } from '../LanguageSelector';
 
 interface SettingsLanguageScreenProps {
   onBack: () => void;
 }
-
-const languages = [
-  { code: 'en', name: 'English' },
-  { code: 'es', name: 'Spanish' },
-  { code: 'fr', name: 'French' },
-  { code: 'de', name: 'German' },
-  { code: 'it', name: 'Italian' },
-  { code: 'pt', name: 'Portuguese' },
-  { code: 'tr', name: 'Turkish' },
-  { code: 'ar', name: 'Arabic' },
-  { code: 'zh', name: 'Chinese' },
-  { code: 'ja', name: 'Japanese' },
-];
 
 export default function SettingsLanguageScreen({ onBack }: SettingsLanguageScreenProps) {
   const [fontsLoaded] = useFonts({
     PlayfairDisplay_700Bold,
     Inter_400Regular,
     Inter_700Bold,
+    Inter_500Medium,
   });
 
-  const [selectedLanguage, setSelectedLanguage] = useState('en');
+  const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0]);
 
   if (!fontsLoaded) {
     return (
@@ -58,18 +47,24 @@ export default function SettingsLanguageScreen({ onBack }: SettingsLanguageScree
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
         <View style={styles.section}>
-          {languages.map((lang, index) => (
+          {LANGUAGES.map((lang, index) => (
             <React.Fragment key={lang.code}>
               <TouchableOpacity
                 style={styles.languageItem}
-                onPress={() => setSelectedLanguage(lang.code)}
+                onPress={() => setSelectedLanguage(lang)}
+                activeOpacity={0.6}
               >
-                <Text style={styles.languageName}>{lang.name}</Text>
-                {selectedLanguage === lang.code && (
-                  <Text style={styles.checkmark}>✓</Text>
+                <View style={styles.languageItemLeft}>
+                  <Text style={styles.itemFlag}>{lang.flag}</Text>
+                  <Text style={styles.itemName}>{lang.name}</Text>
+                </View>
+                {selectedLanguage.code === lang.code && (
+                  <View style={styles.checkIcon}>
+                    <Text style={styles.checkText}>✓</Text>
+                  </View>
                 )}
               </TouchableOpacity>
-              {index < languages.length - 1 && <View style={styles.separator} />}
+              {index < LANGUAGES.length - 1 && <View style={styles.separator} />}
             </React.Fragment>
           ))}
         </View>
@@ -128,24 +123,38 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: 18,
+    paddingHorizontal: 12,
   },
-  languageName: {
-    fontSize: 16,
-    fontFamily: 'Inter_400Regular',
-    color: '#000000',
+  languageItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
   },
-  checkmark: {
+  itemFlag: {
+    fontSize: 26,
+  },
+  itemName: {
     fontSize: 18,
-    color: '#000000',
-    fontFamily: Platform.select({
-      ios: 'System',
-      android: 'Roboto',
-    }),
+    fontFamily: 'Inter_500Medium',
+    color: '#1C1C1E',
+  },
+  checkIcon: {
+    backgroundColor: '#000',
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkText: {
+    color: '#FFF',
+    fontSize: 14,
+    fontWeight: '700',
   },
   separator: {
     height: 1,
-    backgroundColor: '#E0E0E0',
+    backgroundColor: '#F2F2F7',
   },
 });
 
