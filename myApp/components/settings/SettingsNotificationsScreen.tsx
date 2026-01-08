@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Platform } from 'react-native';
 import { useFonts, PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display';
-import { Inter_400Regular, Inter_700Bold } from '@expo-google-fonts/inter';
+import { Inter_400Regular, Inter_700Bold, Inter_500Medium } from '@expo-google-fonts/inter';
 import BackIcon from '../BackIcon';
 
 interface SettingsNotificationsScreenProps {
@@ -13,13 +13,14 @@ export default function SettingsNotificationsScreen({ onBack }: SettingsNotifica
     PlayfairDisplay_700Bold,
     Inter_400Regular,
     Inter_700Bold,
+    Inter_500Medium,
   });
 
   const [pushNotifications, setPushNotifications] = useState(true);
-  const [emailNotifications, setEmailNotifications] = useState(false);
-  const [dailyDigest, setDailyDigest] = useState(true);
-  const [breakingNews, setBreakingNews] = useState(true);
-  const [categoryUpdates, setCategoryUpdates] = useState(false);
+  // const [emailNotifications, setEmailNotifications] = useState(false);
+  // const [dailyDigest, setDailyDigest] = useState(true);
+  // const [breakingNews, setBreakingNews] = useState(true);
+  // const [categoryUpdates, setCategoryUpdates] = useState(false);
 
   if (!fontsLoaded) {
     return (
@@ -49,6 +50,12 @@ export default function SettingsNotificationsScreen({ onBack }: SettingsNotifica
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
         <View style={styles.section}>
+          <View style={styles.infoContainer}>
+            <Text style={styles.infoText}>
+              You'll receive news headlines at your selected time interval. Make sure push notifications are enabled to stay updated.
+            </Text>
+          </View>
+          
           <TouchableOpacity style={styles.settingItem}>
             <Text style={styles.settingLabel}>Push Notifications</Text>
             <Switch
@@ -58,7 +65,9 @@ export default function SettingsNotificationsScreen({ onBack }: SettingsNotifica
               thumbColor="#FFFFFF"
             />
           </TouchableOpacity>
-          <View style={styles.separator} />
+          
+          {/* Commented out notification options */}
+          {/* <View style={styles.separator} />
           <TouchableOpacity style={styles.settingItem}>
             <Text style={styles.settingLabel}>Email Notifications</Text>
             <Switch
@@ -97,7 +106,7 @@ export default function SettingsNotificationsScreen({ onBack }: SettingsNotifica
               trackColor={{ false: '#E6E6E6', true: '#000000' }}
               thumbColor="#FFFFFF"
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
     </View>
@@ -149,6 +158,18 @@ const styles = StyleSheet.create({
   },
   section: {
     marginTop: 24,
+  },
+  infoContainer: {
+    backgroundColor: '#F5F5F7',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 24,
+  },
+  infoText: {
+    fontSize: 14,
+    fontFamily: 'Inter_400Regular',
+    color: '#808080',
+    lineHeight: 20,
   },
   settingItem: {
     flexDirection: 'row',
