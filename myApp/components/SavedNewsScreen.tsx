@@ -408,7 +408,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: 'transparent',
-    paddingBottom: 20,
+    paddingBottom: 0,
   },
   emptyState: {
     flex: 1,

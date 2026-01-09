@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Linking } from 'react-native';
 import { useFonts, Inter_400Regular, Inter_700Bold, Inter_500Medium } from '@expo-google-fonts/inter';
 import BackIcon from './BackIcon';
 import BookmarkIcon from './BookmarkIcon';
@@ -11,6 +11,7 @@ interface NewsDetailScreenProps {
     category: string;
     snippet: string;
     timestamp: string;
+    sourceUrl?: string;
   };
   onBack: () => void;
 }
@@ -29,6 +30,36 @@ export default function NewsDetailScreen({ newsItem, onBack }: NewsDetailScreenP
     category: 'Global',
     snippet: 'On 19 October 2025, thieves disguised as construction workers stole eight pieces of the French Crown Jewels, valued at approximately €88 million, from the Galeria d\'Apollon. The carefully orchestrated heist took place during routine maintenance hours, when workers were frequently seen moving equipment in and out of the gallery. According to investigators, the perpetrators entered the palace with forged documents, blended seamlessly with legitimate staff, and targeted only high-value pieces that could be removed quickly without triggering alarms.',
     timestamp: 'Tuesday, 23.11.2025 at 02.34',
+    sourceUrl: 'https://blabla.com',
+  };
+
+  const openSource = async (url?: string) => {
+    if (!url) return;
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        console.warn("Don't know how to open URI: " + url);
+      }
+    } catch (err) {
+      console.warn('Failed to open URL:', err);
+    }
+  };
+
+  const categoryIcons: Record<string, any> = {
+    'Breaking News': require('../assets/category-icons/BreakingNews.png'),
+    'World': require('../assets/category-icons/World.png'),
+    'Sports': require('../assets/category-icons/Sports.png'),
+    'Business': require('../assets/category-icons/Business.png'),
+    'Entertainment': require('../assets/category-icons/Entertainment.png'),
+    'Technology': require('../assets/category-icons/Technology.png'),
+    'default': require('../assets/category-icons/World.png'),
+  };
+
+  const renderCategoryIcon = (category?: string) => {
+    const src = (category && categoryIcons[category]) ? categoryIcons[category] : categoryIcons['default'];
+    return <Image source={src} style={styles.categoryIconImage} resizeMode="contain" />;
   };
 
   const handleBookmark = () => {
@@ -56,10 +87,10 @@ export default function NewsDetailScreen({ newsItem, onBack }: NewsDetailScreenP
           <View style={styles.content}>
             <Text style={styles.headline}>{article.headline}</Text>
             <View style={styles.metadataRow}>
-              <View style={styles.categoryRow}>
-                <Text style={styles.categoryIcon}>📄</Text>
-                <Text style={styles.categoryText}>{article.category}</Text>
-              </View>
+                <View style={styles.categoryRow}>
+                  {renderCategoryIcon(article.category)}
+                  <Text style={styles.categoryText}>{article.category}</Text>
+                </View>
               <Text style={styles.timestamp}>{article.timestamp}</Text>
             </View>
             <Text style={styles.bodyText}>{article.snippet}</Text>
@@ -110,7 +141,7 @@ export default function NewsDetailScreen({ newsItem, onBack }: NewsDetailScreenP
           {/* Metadata Row */}
           <View style={styles.metadataRow}>
             <View style={styles.categoryRow}>
-              <Text style={styles.categoryIcon}>📄</Text>
+              {renderCategoryIcon(article.category)}
               <Text style={styles.categoryText}>{article.category}</Text>
             </View>
             <Text style={styles.timestamp}>{article.timestamp}</Text>
@@ -122,7 +153,12 @@ export default function NewsDetailScreen({ newsItem, onBack }: NewsDetailScreenP
           {/* Source */}
           <Text style={styles.sourceText}>
             <Text style={styles.sourceLabel}>Source: </Text>
-            <Text style={styles.sourceLink}>https://blabla.com</Text>
+            <Text
+              style={styles.sourceLink}
+              onPress={() => openSource((article as any).sourceUrl || 'https://blabla.com')}
+            >
+              {(article as any).sourceUrl || 'https://blabla.com'}
+            </Text>
           </Text>
         </View>
       </ScrollView>
@@ -236,6 +272,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginRight: 4,
   },
+  categoryIconImage: {
+    width: 18,
+    height: 18,
+    marginRight: 8,
+  },
   categoryText: {
     fontSize: 10,
     fontFamily: 'Inter_400Regular',
@@ -255,6 +296,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     letterSpacing: 0.5,
     marginBottom: 24,
+    // textAlign: 'justify',
   },
   sourceText: {
     fontSize: 10,

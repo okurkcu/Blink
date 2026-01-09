@@ -23,77 +23,113 @@ interface NewsItem {
 const mockNewsData: NewsItem[] = [
   {
     id: '1',
-    headline: 'Louvre Museum Got Robbed',
-    category: 'Global',
-    snippet: 'On 19 October 2025, thieves disguised as construction workers stole eight pieces of the French Crown Jewels valued at approximately €88 million from the Galeria d\'Apollon...',
-    timestamp: 'Tue, 02.34',
+    headline: 'Daring Heist at Louvre Museum Sees Priceless Crown Jewels Stolen',
+    category: 'World',
+    snippet: 'In a brazen daytime raid on October 19, masked thieves executed one of the most audacious museum thefts in recent history by stealing eight priceless pieces from the French crown jewels collection at the Louvre Museum in Paris. Despite the robbery taking less than eight minutes, investigators say the sophistication of the operation — including disguises, specialized tools and a swift getaway on motorbikes — suggests a highly organized criminal operation.\n\nFrench authorities have launched an extensive investigation and multiple suspects have been detained, but the precious jewels, estimated to be worth tens of millions of euros, remain unaccounted for. The theft has reignited global debates over cultural heritage security and prompted increased protections at major museums worldwide. :contentReference[oaicite:0]{index=0}',
+    timestamp: 'Dec 1, 2025',
   },
   {
     id: '2',
-    headline: 'Fall of Curry\'s UA Partnership',
+    headline: 'Under Armour and Stephen Curry End Decade-Long Partnership',
     category: 'Sports',
-    snippet: 'Stephen Curry and Under Armour made their breakup official on Nov. 13, announcing that a decade-plus partnership had ended. Fans of the Golden State Warriors superstar...',
-    timestamp: 'Tue, 00.12',
+    snippet: 'Stephen Curry and athletic apparel giant Under Armour announced that they will part ways, ending a partnership that began in 2013 and redefined athlete branding in basketball. Curry Brand will operate independently after the release of its final collaborative shoe model in early 2026, signaling a significant shift in the basketball footwear market.\n\nUnder Armour said the decision was part of a strategic restructure aimed at reinforcing its core brand focus amid challenging market conditions. Curry expressed gratitude for the relationship while looking forward to future opportunities, potentially including new collaborations and expanded roles within sports business and lifestyle sectors. :contentReference[oaicite:1]{index=1}',
+    timestamp: 'Nov 15, 2025',
   },
   {
     id: '3',
-    headline: 'Trump wants to release Diddy',
-    category: 'Politics',
-    snippet: 'Former President Donald Trump has granted a pardon to Sean \'Diddy\' Combs, clearing his legal record and sparking widespread public debate. The decision quickly drew...',
-    timestamp: 'Mon, 23.05',
+    headline: 'G20 Summit in Johannesburg Focuses on Global Economic Inequality',
+    category: 'World',
+    snippet: 'Leaders from the world’s largest economies convened in Johannesburg for the 2025 G20 Summit, marking the first time the group met on African soil. Discussions centered on global economic inequality, climate financing and the need for coordinated action to support developing nations.\n\nThe summit yielded several joint commitments on sustainable development goals and tax reforms for multinational corporations, though disagreements over trade policies persisted. Analysts say the outcomes could shape global economic strategies for years to come. :contentReference[oaicite:2]{index=2}',
+    timestamp: 'Nov 25, 2025',
   },
   {
     id: '4',
-    headline: 'Bla Bla Bla',
-    category: 'Global',
-    snippet: 'Authorities have launched an investigation into a reported sexual assault involving Ozan and Arınç. According to officials, the incident was brought to light after...',
-    timestamp: 'Tue, 03.10',
+    headline: 'Italian General Strikes Highlight Deepening Public Frustration Over Foreign Policy',
+    category: 'Breaking News',
+    snippet: 'Massive demonstrations and general strikes broke out across Italy as citizens protested government policies related to the conflict in Gaza and alleged complicity in arms shipments. Tens of thousands marched in Rome, Milan and other major cities, disrupting transportation, schools and public services.\n\nThe strikes, organized by labor unions and grassroots movements, mark one of the largest waves of civil unrest in Italy this year. Protest leaders are calling for a shift in diplomatic priorities and greater humanitarian engagement, while government officials have appealed for calm and promised future dialogue. :contentReference[oaicite:3]{index=3}',
+    timestamp: 'Dec 3, 2025',
   },
   {
     id: '5',
-    headline: '"Yes King" dies at 52',
-    category: 'Entertainment',
-    snippet: 'On 19 October 2025, thieves disguised as construction workers stole eight pieces of the French Crown Jewels valued at approximately €88 million from the Galeria d\'Apollon...',
-    timestamp: 'Mon, 22.00',
+    headline: 'APEC 2025 Concludes With Focus on Sustainable Economic Growth in Asia-Pacific',
+    category: 'World',
+    snippet: 'The Asia-Pacific Economic Cooperation (APEC) summit concluded in Gyeongju, South Korea, after leaders from across the region reaffirmed commitments to sustainable economic growth, digital innovation and climate resilience. Key initiatives included infrastructure investments with environmental safeguards and tech cooperation frameworks.\n\nLeaders emphasized inclusive growth that benefits all member economies, especially in the face of global supply chain disruptions and regional tensions. Observers hailed the summit as a crucial step toward deeper economic integration in the Asia-Pacific. :contentReference[oaicite:4]{index=4}',
+    timestamp: 'Nov 1, 2025',
   },
   {
     id: '6',
-    headline: 'Tech Giants Announce New AI Initiative',
-    category: 'Science & Tech',
-    snippet: 'Major technology companies have joined forces to launch a groundbreaking artificial intelligence initiative aimed at advancing research and development...',
-    timestamp: 'Mon, 21.45',
+    headline: 'Flash Flooding Across Central United States Causes Widespread Damage',
+    category: 'Breaking News',
+    snippet: 'Unusually severe flash flooding triggered by erratic weather patterns battered central and eastern regions of the United States this fall, leaving hundreds of homes damaged and displacing thousands of residents. Meteorologists linked the events to a weakened jet stream that funneled moist air inland, exacerbating rainfall intensity beyond historical norms.\n\nLocal authorities deployed emergency services and federal aid teams to assist in rescue and recovery operations. With climate scientists warning such extremes may become more common, policymakers are under increasing pressure to invest in resilient infrastructure. :contentReference[oaicite:5]{index=5}',
+    timestamp: 'Oct 20, 2025',
   },
   {
     id: '7',
-    headline: 'Climate Summit Reaches Historic Agreement',
-    category: 'Global',
-    snippet: 'World leaders have reached a historic agreement on climate action, committing to ambitious targets for reducing carbon emissions over the next decade...',
-    timestamp: 'Mon, 20.30',
+    headline: 'World Health Leaders Warn of Escalating Mental Health Crisis',
+    category: 'World',
+    snippet: 'In a comprehensive report released this year, the World Health Organization reported that over one billion people globally are living with mental health conditions, underscoring a mounting public health challenge. Stress, anxiety and depression are rising across age groups, prompting calls for expanded access to mental health services and stronger community support networks.\n\nHealth advocates stress the importance of integrating mental well-being into primary healthcare systems and bolstering funding for preventive programs worldwide. :contentReference[oaicite:6]{index=6}',
+    timestamp: 'Sep 15, 2025',
   },
   {
     id: '8',
-    headline: 'New Breakthrough in Medical Research',
-    category: 'Science & Tech',
-    snippet: 'Scientists have announced a major breakthrough in medical research that could revolutionize treatment for chronic diseases, offering new hope to millions...',
-    timestamp: 'Mon, 19.15',
+    headline: 'Israel-Iran Escalation Raises Global Security Concerns',
+    category: 'World',
+    snippet: 'Tensions between Israel and Iran escalated dramatically in June, when Israeli forces launched missile strikes on Iranian military and nuclear infrastructure, prompting retaliatory attacks and widespread international alarm. The confrontations, among the most intense in recent years, drew limited external involvement but heightened fears of broader regional conflict.\n\nDiplomats from Europe, the United States and the United Nations have urged de-escalation, emphasizing the need for renewed negotiations and humanitarian safeguards as civilian populations in affected areas face increasing hardship. :contentReference[oaicite:7]{index=7}',
+    timestamp: 'Jun 15, 2025',
   },
   {
     id: '9',
-    headline: 'Stock Market Reaches All-Time High',
-    category: 'Business',
-    snippet: 'Global stock markets surged to record highs today as investors respond positively to economic indicators and corporate earnings reports...',
-    timestamp: 'Mon, 18.30',
+    headline: 'Super Bowl LIX Sees Record Viewership and a Thrilling Victory',
+    category: 'Sports',
+    snippet: 'Super Bowl LIX captivated viewers worldwide as the Philadelphia Eagles secured a decisive victory over the Kansas City Chiefs, with a commanding performance that included strategic plays and standout moments. The game broke multiple viewership records, reflecting the enduring global appeal of America’s premier sporting event.\n\nAnalysts credited the intense competition and dramatic narrative arc for driving engagement across digital platforms and social media, making it one of the most watched championships in recent history. :contentReference[oaicite:8]{index=8}',
+    timestamp: 'Feb 12, 2025',
   },
   {
     id: '10',
-    headline: 'New Health Guidelines Released',
-    category: 'Health',
-    snippet: 'The World Health Organization has released updated guidelines for public health, focusing on preventive care and wellness...',
-    timestamp: 'Mon, 17.45',
+    headline: 'Record-Setting Heatwaves Sweep Across Europe and Asia This Summer',
+    category: 'Breaking News',
+    snippet: 'This summer, Europe and parts of Asia experienced unprecedented heatwaves that broke longstanding temperature records and strained public health systems. Cities reported surges in heat-related illnesses, while energy grids struggled to keep up with increased cooling demands.\n\nClimate scientists linked the extreme heat to atmospheric shifts associated with global warming, emphasizing the urgent need for mitigation strategies and adaptation policies. Governments have since pledged enhanced heat-wave response plans and investments in sustainable energy solutions. :contentReference[oaicite:9]{index=9}',
+    timestamp: 'Aug 10, 2025',
   },
-];
+  {
+    id: '11',
+    headline: 'Global Markets React to Record Cloud Security Acquisition',
+    category: 'Business',
+    snippet: 'Tech giant Alphabet announced its intention to acquire cloud security startup Wiz in one of the largest deals of 2025, valued at an estimated $32 billion. The acquisition aims to expand cloud security offerings and accelerate innovation in protecting enterprise environments from evolving cyber threats.\n\nMarket analysts noted that the scale of the deal reflects intensifying competition in the cybersecurity sector, with organizations seeking robust solutions amid rising digital infrastructure vulnerabilities. :contentReference[oaicite:10]{index=10}',
+    timestamp: 'Mar 18, 2025',
+  },
+  {
+    id: '12',
+    headline: 'Major Metropolitan Transit Strike Disrupts Millions of Commuters',
+    category: 'Business',
+    snippet: 'A coordinated strike by transit workers in several major global cities halted rail and bus services, affecting millions of daily commuters and prompting urgent negotiations between labor unions and municipal governments. The walkouts, driven by demands for better pay and working conditions, underscored growing tensions between urban workforces and policymakers.\n\nAuthorities warned that prolonged disruptions could dampen economic productivity and urged both sides to seek compromise as delays continued into a second week. ’',
+    timestamp: 'Nov 5, 2025',
+  },
+  {
+    id: '13',
+    headline: 'Innovative AI Regulation Framework Proposed by Global Coalition',
+    category: 'Technology',
+    snippet: 'A coalition of nations and tech leaders proposed a comprehensive framework for regulating artificial intelligence technology, aiming to balance innovation with ethical safeguards and safety standards. The proposal includes guidelines for transparency, accountability and cross-border cooperation.\n\nProponents say the initiative could set a global precedent for AI governance, addressing concerns over bias, security and economic displacement while fostering responsible technological advancement. ’',
+    timestamp: 'Oct 30, 2025',
+  },
+  {
+    id: '14',
+    headline: 'Breakthrough in Renewable Energy Storage Announced by International Scientists',
+    category: 'Technology',
+    snippet: 'Researchers unveiled a major breakthrough in battery technology that could dramatically improve renewable energy storage capacity, potentially transforming how solar and wind power are integrated into electrical grids. Early tests indicate significantly higher efficiency and longer lifespan than current commercial solutions.\n\nIndustry leaders hailed the development as a key step toward reducing reliance on fossil fuels and accelerating global transitions to cleaner energy sources. ’',
+    timestamp: 'Nov 22, 2025',
+  },
+  {
+    id: '15',
+    headline: 'Pioneering Space Telescope Detects Unprecedented Cosmic Signals',
+    category: 'Technology',
+    snippet: 'Astronomers operating a next-generation space telescope announced the detection of unusual cosmic signals that may offer new insights into the early universe’s structure and formation. The findings could challenge existing astrophysical models and open avenues for further exploration.\n\nThe scientific community plans follow-up observations and peer-reviewed studies to better understand the implications of the discovery. ’',
+    timestamp: 'Dec 10, 2025',
+  }
+]
 
-const categories = ['All', 'Global', 'Sports', 'Politics', 'Entertainment', 'Science & Tech', 'Business', 'Health'];
+
+const categories = ['All', 'Breaking News', 'World', 'Sports', 'Business', 'Entertainment', 'Technology'];
 
 interface MainScreenProps {
   onReset?: () => void;
@@ -184,6 +220,22 @@ export default function MainScreen({ onReset }: MainScreenProps) {
 
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
+  };
+
+  const categoryIcons: { [key: string]: any } = {
+    'Breaking News': require('../assets/category-icons/BreakingNews.png'),
+    'World': require('../assets/category-icons/World.png'),
+    'Sports': require('../assets/category-icons/Sports.png'),
+    'Business': require('../assets/category-icons/Business.png'),
+    'Entertainment': require('../assets/category-icons/Entertainment.png'),
+    'Technology': require('../assets/category-icons/Technology.png'),
+    'All': require('../assets/category-icons/World.png'),
+    'default': require('../assets/category-icons/World.png'),
+  };
+
+  const renderCategoryIcon = (category: string) => {
+    const src = categoryIcons[category] || categoryIcons['default'];
+    return <Image source={src} style={styles.categoryIconImage} resizeMode="contain" />;
   };
 
   // Filter news based on selected category
@@ -323,7 +375,7 @@ export default function MainScreen({ onReset }: MainScreenProps) {
               <View style={styles.newsItemContent}>
                 <Text style={styles.headline}>{item.headline}</Text>
                 <View style={styles.categoryRow}>
-                  <Text style={styles.categoryIcon}>📄</Text>
+                  {renderCategoryIcon(item.category)}
                   <Text style={styles.categoryText}>{item.category}</Text>
                 </View>
                 <Text style={styles.snippet}>{item.snippet}</Text>
@@ -391,7 +443,7 @@ export default function MainScreen({ onReset }: MainScreenProps) {
                     <Text style={styles.timestamp}>{item.timestamp}</Text>
                   </View>
                   <View style={styles.categoryRow}>
-                    <Text style={styles.categoryIcon}>📄</Text>
+                    {renderCategoryIcon(item.category)}
                     <Text style={styles.categoryText}>{item.category}</Text>
                   </View>
                   <Text style={styles.snippet} numberOfLines={3}>{item.snippet}</Text>
@@ -557,7 +609,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: 'transparent',
-    paddingBottom: 20,
+    paddingBottom: 0,
   },
   newsItem: {
     paddingVertical: 16,
@@ -595,6 +647,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginRight: 4,
   },
+  categoryIconImage: {
+    width: 15,
+    height: 15,
+    marginRight: 8,
+  },
   categoryText: {
     fontSize: 10,
     fontFamily: 'Inter_400Regular',
@@ -607,6 +664,8 @@ const styles = StyleSheet.create({
     color: '#000000',
     lineHeight: 12,
     marginTop: 4,
+    marginRight: 5,
+    // textAlign: 'justify',
   },
   separator: {
     height: 1,
