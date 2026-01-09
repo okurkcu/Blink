@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -14,18 +14,64 @@ import {
 
 const { height } = Dimensions.get('window');
 
-const LANGUAGES = [
+export const LANGUAGES = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
   { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
   { code: 'es', name: 'Español', flag: '🇪🇸' },
 ];
 
-const LanguageSelector = () => {
-  const [visible, setVisible] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0]);
+interface LanguageSelectorProps {
+  visible?: boolean;
+  onClose?: () => void;
+  showTrigger?: boolean;
+  onLanguageChange?: (language: typeof LANGUAGES[0]) => void;
+  initialLanguage?: typeof LANGUAGES[0];
+}
+
+const LanguageSelector = ({
+  visible: externalVisible,
+  onClose: externalOnClose,
+  showTrigger = true,
+  onLanguageChange,
+  initialLanguage,
+}: LanguageSelectorProps) => {
+  const [internalVisible, setInternalVisible] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState(initialLanguage || LANGUAGES[0]);
+  
+  // Use external visible if provided, otherwise use internal state
+  const visible = externalVisible !== undefined ? externalVisible : internalVisible;
   const slideAnim = useRef(new Animated.Value(height)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const closeSheetRef = useRef<(() => void) | undefined>(undefined);
+
+  const closeSheet = useCallback(() => {
+    Animated.parallel([
+      Animated.timing(slideAnim, {
+        toValue: height,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      if (externalVisible === undefined) {
+        setInternalVisible(false);
+      }
+      slideAnim.setValue(height);
+      if (externalOnClose) {
+        externalOnClose();
+      }
+    });
+  }, [externalVisible, externalOnClose, slideAnim, fadeAnim]);
+
+  // Update ref when closeSheet changes
+  useEffect(() => {
+    closeSheetRef.current = closeSheet;
+  }, [closeSheet]);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -44,7 +90,7 @@ const LanguageSelector = () => {
       },
       onPanResponderRelease: (_, gestureState) => {
         if (gestureState.dy > 100 || gestureState.vy > 0.5) {
-          closeSheet();
+          closeSheetRef.current?.();
         } else {
           Animated.spring(slideAnim, {
             toValue: 0,
@@ -63,8 +109,11 @@ const LanguageSelector = () => {
     })
   ).current;
 
+
   const openSheet = () => {
-    setVisible(true);
+    if (externalVisible === undefined) {
+      setInternalVisible(true);
+    }
     Animated.parallel([
       Animated.timing(slideAnim, {
         toValue: 0,
@@ -79,37 +128,47 @@ const LanguageSelector = () => {
     ]).start();
   };
 
-  const closeSheet = () => {
-    Animated.parallel([
-      Animated.timing(slideAnim, {
-        toValue: height,
-        duration: 250,
-        useNativeDriver: true,
-      }),
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 250,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      setVisible(false);
-      slideAnim.setValue(height);
-    });
-  };
+  // Sync animation when external visible changes
+  useEffect(() => {
+    if (externalVisible !== undefined) {
+      if (externalVisible) {
+        Animated.parallel([
+          Animated.timing(slideAnim, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+          }),
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      } else {
+        closeSheet();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [externalVisible]);
 
   const selectLanguage = (lang: typeof LANGUAGES[0]) => {
     setSelectedLanguage(lang);
+    if (onLanguageChange) {
+      onLanguageChange(lang);
+    }
     setTimeout(closeSheet, 100);
   };
 
   return (
     <>
-      <TouchableOpacity style={styles.selectorTrigger} onPress={openSheet} activeOpacity={0.7}>
-        <View style={styles.triggerContent}>
-          <Text style={styles.triggerFlag}>{selectedLanguage.flag}</Text>
-          <Text style={styles.triggerText}>{selectedLanguage.code.toUpperCase()}</Text>
-        </View>
-      </TouchableOpacity>
+      {showTrigger && (
+        <TouchableOpacity style={styles.selectorTrigger} onPress={openSheet} activeOpacity={0.7}>
+          <View style={styles.triggerContent}>
+            <Text style={styles.triggerFlag}>{selectedLanguage.flag}</Text>
+            <Text style={styles.triggerText}>{selectedLanguage.code.toUpperCase()}</Text>
+          </View>
+        </TouchableOpacity>
+      )}
 
       <Modal
         visible={visible}

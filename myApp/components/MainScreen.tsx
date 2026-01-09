@@ -366,7 +366,11 @@ export default function MainScreen({ onReset }: MainScreenProps) {
             <Text style={styles.appTitle}>Blink</Text>
           </View>
           <TouchableOpacity onPress={handleAvatarPress} activeOpacity={0.7}>
-            <View style={styles.avatarPlaceholder} />
+            <View style={styles.avatarContainer}>
+              <View style={styles.avatar}>
+                <Text style={styles.avatarInitials}>JD</Text>
+              </View>
+            </View>
           </TouchableOpacity>
         </View>
         <ScrollView style={styles.scrollView}>
@@ -411,7 +415,9 @@ export default function MainScreen({ onReset }: MainScreenProps) {
           </View>
           <TouchableOpacity onPress={handleAvatarPress} activeOpacity={0.7}>
             <View style={styles.avatarContainer}>
-              <View style={styles.avatar} />
+              <View style={styles.avatar}>
+                <Text style={styles.avatarInitials}>JD</Text>
+              </View>
             </View>
           </TouchableOpacity>
         </View>
@@ -585,13 +591,14 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#d9d9d9',
+    backgroundColor: '#000000',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  avatarPlaceholder: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#d9d9d9',
+  avatarInitials: {
+    fontSize: 14,
+    fontFamily: 'Inter_700Bold',
+    color: '#FFFFFF',
   },
   scrollViewWrapper: {
     flex: 1,
