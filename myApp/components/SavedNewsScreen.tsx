@@ -210,6 +210,25 @@ export default function SavedNewsScreen({ onBack, onSlideAnimReady }: SavedNewsS
     setSelectedCategory(category);
   };
 
+  const categoryIcons: { [key: string]: any } = {
+    'Global': require('../assets/category-icons/World.png'),
+    'Breaking News': require('../assets/category-icons/BreakingNews.png'),
+    'Sports': require('../assets/category-icons/Sports.png'),
+    'Business': require('../assets/category-icons/Business.png'),
+    'Entertainment': require('../assets/category-icons/Entertainment.png'),
+    'Technology': require('../assets/category-icons/Technology.png'),
+    'Science & Tech': require('../assets/category-icons/Technology.png'),
+    'Politics': require('../assets/category-icons/BreakingNews.png'),
+    'Health': require('../assets/category-icons/BreakingNews.png'),
+    'All': require('../assets/category-icons/World.png'),
+    'default': require('../assets/category-icons/World.png'),
+  };
+
+  const renderCategoryIcon = (category?: string) => {
+    const src = (category && categoryIcons[category]) ? categoryIcons[category] : categoryIcons['default'];
+    return <Image source={src} style={styles.categoryIconImage} resizeMode="contain" />;
+  };
+
   // Filter news based on selected category
   const filteredNews = selectedCategory === 'All' 
     ? mockSavedNewsData 
@@ -236,7 +255,7 @@ export default function SavedNewsScreen({ onBack, onSlideAnimReady }: SavedNewsS
               <View style={styles.newsItemContent}>
                 <Text style={styles.headline}>{item.headline}</Text>
                 <View style={styles.categoryRow}>
-                  <Text style={styles.categoryIcon}>📄</Text>
+                  {renderCategoryIcon(item.category)}
                   <Text style={styles.categoryText}>{item.category}</Text>
                 </View>
                 <Text style={styles.snippet}>{item.snippet}</Text>
@@ -319,7 +338,7 @@ export default function SavedNewsScreen({ onBack, onSlideAnimReady }: SavedNewsS
                   </View>
                   <View style={styles.metadataRow}>
                     <View style={styles.categoryRow}>
-                      <Text style={styles.categoryIcon}>📄</Text>
+                      {renderCategoryIcon(item.category)}
                       <Text style={styles.categoryText}>{item.category}</Text>
                     </View>
                     <Text style={styles.savedDate}>{item.savedDate}</Text>
@@ -336,10 +355,7 @@ export default function SavedNewsScreen({ onBack, onSlideAnimReady }: SavedNewsS
         )}
       </ScrollView>
       </View>
-      {/* Page Indicator - Fixed at bottom */}
-      <View style={styles.indicatorContainer}>
-        <PageIndicator totalPages={2} currentPage={1} />
-      </View>
+      {/* PageIndicator is rendered by MainScreen (fixed and independent) */}
 
       {/* News Detail Screen (slides in from right when news is selected) */}
       {selectedNews && (
@@ -468,6 +484,11 @@ const styles = StyleSheet.create({
   categoryIcon: {
     fontSize: 12,
     marginRight: 4,
+  },
+  categoryIconImage: {
+    width: 18,
+    height: 18,
+    marginRight: 8,
   },
   categoryText: {
     fontSize: 10,

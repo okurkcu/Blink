@@ -25,77 +25,77 @@ const mockNewsData: NewsItem[] = [
     id: '1',
     headline: 'Daring Heist at Louvre Museum Sees Priceless Crown Jewels Stolen',
     category: 'World',
-    snippet: 'In a brazen daytime raid on October 19, masked thieves executed one of the most audacious museum thefts in recent history by stealing eight priceless pieces from the French crown jewels collection at the Louvre Museum in Paris. Despite the robbery taking less than eight minutes, investigators say the sophistication of the operation — including disguises, specialized tools and a swift getaway on motorbikes — suggests a highly organized criminal operation.\n\nFrench authorities have launched an extensive investigation and multiple suspects have been detained, but the precious jewels, estimated to be worth tens of millions of euros, remain unaccounted for. The theft has reignited global debates over cultural heritage security and prompted increased protections at major museums worldwide. :contentReference[oaicite:0]{index=0}',
+    snippet: 'In a brazen daytime raid on October 19, masked thieves executed one of the most audacious museum thefts in recent history by stealing eight priceless pieces from the French crown jewels collection at the Louvre Museum in Paris. Despite the robbery taking less than eight minutes, investigators say the sophistication of the operation — including disguises, specialized tools and a swift getaway on motorbikes — suggests a highly organized criminal operation.\n\nFrench authorities have launched an extensive investigation and multiple suspects have been detained, but the precious jewels, estimated to be worth tens of millions of euros, remain unaccounted for. The theft has reignited global debates over cultural heritage security and prompted increased protections at major museums worldwide.',
     timestamp: 'Dec 1, 2025',
   },
   {
     id: '2',
     headline: 'Under Armour and Stephen Curry End Decade-Long Partnership',
     category: 'Sports',
-    snippet: 'Stephen Curry and athletic apparel giant Under Armour announced that they will part ways, ending a partnership that began in 2013 and redefined athlete branding in basketball. Curry Brand will operate independently after the release of its final collaborative shoe model in early 2026, signaling a significant shift in the basketball footwear market.\n\nUnder Armour said the decision was part of a strategic restructure aimed at reinforcing its core brand focus amid challenging market conditions. Curry expressed gratitude for the relationship while looking forward to future opportunities, potentially including new collaborations and expanded roles within sports business and lifestyle sectors. :contentReference[oaicite:1]{index=1}',
+    snippet: 'Stephen Curry and athletic apparel giant Under Armour announced that they will part ways, ending a partnership that began in 2013 and redefined athlete branding in basketball. Curry Brand will operate independently after the release of its final collaborative shoe model in early 2026, signaling a significant shift in the basketball footwear market.\n\nUnder Armour said the decision was part of a strategic restructure aimed at reinforcing its core brand focus amid challenging market conditions. Curry expressed gratitude for the relationship while looking forward to future opportunities, potentially including new collaborations and expanded roles within sports business and lifestyle sectors.',
     timestamp: 'Nov 15, 2025',
   },
   {
     id: '3',
     headline: 'G20 Summit in Johannesburg Focuses on Global Economic Inequality',
     category: 'World',
-    snippet: 'Leaders from the world’s largest economies convened in Johannesburg for the 2025 G20 Summit, marking the first time the group met on African soil. Discussions centered on global economic inequality, climate financing and the need for coordinated action to support developing nations.\n\nThe summit yielded several joint commitments on sustainable development goals and tax reforms for multinational corporations, though disagreements over trade policies persisted. Analysts say the outcomes could shape global economic strategies for years to come. :contentReference[oaicite:2]{index=2}',
+    snippet: 'Leaders from the world’s largest economies convened in Johannesburg for the 2025 G20 Summit, marking the first time the group met on African soil. Discussions centered on global economic inequality, climate financing and the need for coordinated action to support developing nations.\n\nThe summit yielded several joint commitments on sustainable development goals and tax reforms for multinational corporations, though disagreements over trade policies persisted. Analysts say the outcomes could shape global economic strategies for years to come.',
     timestamp: 'Nov 25, 2025',
   },
   {
     id: '4',
     headline: 'Italian General Strikes Highlight Deepening Public Frustration Over Foreign Policy',
     category: 'Breaking News',
-    snippet: 'Massive demonstrations and general strikes broke out across Italy as citizens protested government policies related to the conflict in Gaza and alleged complicity in arms shipments. Tens of thousands marched in Rome, Milan and other major cities, disrupting transportation, schools and public services.\n\nThe strikes, organized by labor unions and grassroots movements, mark one of the largest waves of civil unrest in Italy this year. Protest leaders are calling for a shift in diplomatic priorities and greater humanitarian engagement, while government officials have appealed for calm and promised future dialogue. :contentReference[oaicite:3]{index=3}',
+    snippet: 'Massive demonstrations and general strikes broke out across Italy as citizens protested government policies related to the conflict in Gaza and alleged complicity in arms shipments. Tens of thousands marched in Rome, Milan and other major cities, disrupting transportation, schools and public services.\n\nThe strikes, organized by labor unions and grassroots movements, mark one of the largest waves of civil unrest in Italy this year. Protest leaders are calling for a shift in diplomatic priorities and greater humanitarian engagement, while government officials have appealed for calm and promised future dialogue.',
     timestamp: 'Dec 3, 2025',
   },
   {
     id: '5',
     headline: 'APEC 2025 Concludes With Focus on Sustainable Economic Growth in Asia-Pacific',
     category: 'World',
-    snippet: 'The Asia-Pacific Economic Cooperation (APEC) summit concluded in Gyeongju, South Korea, after leaders from across the region reaffirmed commitments to sustainable economic growth, digital innovation and climate resilience. Key initiatives included infrastructure investments with environmental safeguards and tech cooperation frameworks.\n\nLeaders emphasized inclusive growth that benefits all member economies, especially in the face of global supply chain disruptions and regional tensions. Observers hailed the summit as a crucial step toward deeper economic integration in the Asia-Pacific. :contentReference[oaicite:4]{index=4}',
+    snippet: 'The Asia-Pacific Economic Cooperation (APEC) summit concluded in Gyeongju, South Korea, after leaders from across the region reaffirmed commitments to sustainable economic growth, digital innovation and climate resilience. Key initiatives included infrastructure investments with environmental safeguards and tech cooperation frameworks.\n\nLeaders emphasized inclusive growth that benefits all member economies, especially in the face of global supply chain disruptions and regional tensions. Observers hailed the summit as a crucial step toward deeper economic integration in the Asia-Pacific.',
     timestamp: 'Nov 1, 2025',
   },
   {
     id: '6',
     headline: 'Flash Flooding Across Central United States Causes Widespread Damage',
     category: 'Breaking News',
-    snippet: 'Unusually severe flash flooding triggered by erratic weather patterns battered central and eastern regions of the United States this fall, leaving hundreds of homes damaged and displacing thousands of residents. Meteorologists linked the events to a weakened jet stream that funneled moist air inland, exacerbating rainfall intensity beyond historical norms.\n\nLocal authorities deployed emergency services and federal aid teams to assist in rescue and recovery operations. With climate scientists warning such extremes may become more common, policymakers are under increasing pressure to invest in resilient infrastructure. :contentReference[oaicite:5]{index=5}',
+    snippet: 'Unusually severe flash flooding triggered by erratic weather patterns battered central and eastern regions of the United States this fall, leaving hundreds of homes damaged and displacing thousands of residents. Meteorologists linked the events to a weakened jet stream that funneled moist air inland, exacerbating rainfall intensity beyond historical norms.\n\nLocal authorities deployed emergency services and federal aid teams to assist in rescue and recovery operations. With climate scientists warning such extremes may become more common, policymakers are under increasing pressure to invest in resilient infrastructure.',
     timestamp: 'Oct 20, 2025',
   },
   {
     id: '7',
     headline: 'World Health Leaders Warn of Escalating Mental Health Crisis',
     category: 'World',
-    snippet: 'In a comprehensive report released this year, the World Health Organization reported that over one billion people globally are living with mental health conditions, underscoring a mounting public health challenge. Stress, anxiety and depression are rising across age groups, prompting calls for expanded access to mental health services and stronger community support networks.\n\nHealth advocates stress the importance of integrating mental well-being into primary healthcare systems and bolstering funding for preventive programs worldwide. :contentReference[oaicite:6]{index=6}',
+    snippet: 'In a comprehensive report released this year, the World Health Organization reported that over one billion people globally are living with mental health conditions, underscoring a mounting public health challenge. Stress, anxiety and depression are rising across age groups, prompting calls for expanded access to mental health services and stronger community support networks.\n\nHealth advocates stress the importance of integrating mental well-being into primary healthcare systems and bolstering funding for preventive programs worldwide.',
     timestamp: 'Sep 15, 2025',
   },
   {
     id: '8',
     headline: 'Israel-Iran Escalation Raises Global Security Concerns',
     category: 'World',
-    snippet: 'Tensions between Israel and Iran escalated dramatically in June, when Israeli forces launched missile strikes on Iranian military and nuclear infrastructure, prompting retaliatory attacks and widespread international alarm. The confrontations, among the most intense in recent years, drew limited external involvement but heightened fears of broader regional conflict.\n\nDiplomats from Europe, the United States and the United Nations have urged de-escalation, emphasizing the need for renewed negotiations and humanitarian safeguards as civilian populations in affected areas face increasing hardship. :contentReference[oaicite:7]{index=7}',
+    snippet: 'Tensions between Israel and Iran escalated dramatically in June, when Israeli forces launched missile strikes on Iranian military and nuclear infrastructure, prompting retaliatory attacks and widespread international alarm. The confrontations, among the most intense in recent years, drew limited external involvement but heightened fears of broader regional conflict.\n\nDiplomats from Europe, the United States and the United Nations have urged de-escalation, emphasizing the need for renewed negotiations and humanitarian safeguards as civilian populations in affected areas face increasing hardship.',
     timestamp: 'Jun 15, 2025',
   },
   {
     id: '9',
     headline: 'Super Bowl LIX Sees Record Viewership and a Thrilling Victory',
     category: 'Sports',
-    snippet: 'Super Bowl LIX captivated viewers worldwide as the Philadelphia Eagles secured a decisive victory over the Kansas City Chiefs, with a commanding performance that included strategic plays and standout moments. The game broke multiple viewership records, reflecting the enduring global appeal of America’s premier sporting event.\n\nAnalysts credited the intense competition and dramatic narrative arc for driving engagement across digital platforms and social media, making it one of the most watched championships in recent history. :contentReference[oaicite:8]{index=8}',
+    snippet: 'Super Bowl LIX captivated viewers worldwide as the Philadelphia Eagles secured a decisive victory over the Kansas City Chiefs, with a commanding performance that included strategic plays and standout moments. The game broke multiple viewership records, reflecting the enduring global appeal of America’s premier sporting event.\n\nAnalysts credited the intense competition and dramatic narrative arc for driving engagement across digital platforms and social media, making it one of the most watched championships in recent history.',
     timestamp: 'Feb 12, 2025',
   },
   {
     id: '10',
     headline: 'Record-Setting Heatwaves Sweep Across Europe and Asia This Summer',
     category: 'Breaking News',
-    snippet: 'This summer, Europe and parts of Asia experienced unprecedented heatwaves that broke longstanding temperature records and strained public health systems. Cities reported surges in heat-related illnesses, while energy grids struggled to keep up with increased cooling demands.\n\nClimate scientists linked the extreme heat to atmospheric shifts associated with global warming, emphasizing the urgent need for mitigation strategies and adaptation policies. Governments have since pledged enhanced heat-wave response plans and investments in sustainable energy solutions. :contentReference[oaicite:9]{index=9}',
+    snippet: 'This summer, Europe and parts of Asia experienced unprecedented heatwaves that broke longstanding temperature records and strained public health systems. Cities reported surges in heat-related illnesses, while energy grids struggled to keep up with increased cooling demands.\n\nClimate scientists linked the extreme heat to atmospheric shifts associated with global warming, emphasizing the urgent need for mitigation strategies and adaptation policies. Governments have since pledged enhanced heat-wave response plans and investments in sustainable energy solutions.',
     timestamp: 'Aug 10, 2025',
   },
   {
     id: '11',
     headline: 'Global Markets React to Record Cloud Security Acquisition',
     category: 'Business',
-    snippet: 'Tech giant Alphabet announced its intention to acquire cloud security startup Wiz in one of the largest deals of 2025, valued at an estimated $32 billion. The acquisition aims to expand cloud security offerings and accelerate innovation in protecting enterprise environments from evolving cyber threats.\n\nMarket analysts noted that the scale of the deal reflects intensifying competition in the cybersecurity sector, with organizations seeking robust solutions amid rising digital infrastructure vulnerabilities. :contentReference[oaicite:10]{index=10}',
+    snippet: 'Tech giant Alphabet announced its intention to acquire cloud security startup Wiz in one of the largest deals of 2025, valued at an estimated $32 billion. The acquisition aims to expand cloud security offerings and accelerate innovation in protecting enterprise environments from evolving cyber threats.\n\nMarket analysts noted that the scale of the deal reflects intensifying competition in the cybersecurity sector, with organizations seeking robust solutions amid rising digital infrastructure vulnerabilities.',
     timestamp: 'Mar 18, 2025',
   },
   {
@@ -148,6 +148,7 @@ export default function MainScreen({ onReset }: MainScreenProps) {
   const [showSettings, setShowSettings] = useState(false);
   const [showSavedNews, setShowSavedNews] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [savedNewsDetailVisible, setSavedNewsDetailVisible] = useState(false);
   
   const slideAnim = useRef(new Animated.Value(0)).current;
   const savedNewsSlideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current;
@@ -221,6 +222,13 @@ export default function MainScreen({ onReset }: MainScreenProps) {
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
   };
+
+  // progress: 0 => main page active, 1 => saved page active
+  const progress = slideAnim.interpolate({
+    inputRange: [-SCREEN_WIDTH, 0],
+    outputRange: [1, 0],
+    extrapolate: 'clamp',
+  });
 
   const categoryIcons: { [key: string]: any } = {
     'Breaking News': require('../assets/category-icons/BreakingNews.png'),
@@ -468,10 +476,7 @@ export default function MainScreen({ onReset }: MainScreenProps) {
           </TouchableOpacity>
         </ScrollView>
         </View>
-        {/* Page Indicator - Fixed at bottom */}
-        <View style={styles.indicatorContainer}>
-          <PageIndicator totalPages={2} currentPage={0} />
-        </View>
+        {/* Page Indicator removed from this translated container (fixed below) */}
       </Animated.View>
 
       {/* Saved News Screen (hidden behind, slides in on swipe) */}
@@ -515,6 +520,12 @@ export default function MainScreen({ onReset }: MainScreenProps) {
         >
           <SettingsScreen onBack={handleSettingsBack} />
         </Animated.View>
+      )}
+      {/* Fixed Page Indicator (only show on MainScreen or SavedNewsScreen) */}
+      { (showSavedNews || (!selectedNews && !showSettings && !showStartTime && !showEndTime)) && !savedNewsDetailVisible && (
+        <View style={styles.indicatorContainer} pointerEvents="none">
+          <PageIndicator totalPages={2} progress={progress} />
+        </View>
       )}
     </View>
   );
